@@ -108,12 +108,6 @@ vip: 192.168.1.1
 # DEPENDENT_PACKAGES: [ntp, vim, wget, gcc, gcc-c++, libselinux-python]
 DEPENDENT_PACKAGES: [ntp, vim, wget]
 
-# set time tag
-# 默认支持配置系统时间同步
-TIME:
-  time_tag: true
-  time_server: "0.centos.pool.ntp.org"
-
 # NetworkManager tag
 # 默认关闭NetworkManager服务
 NetworkManager_TAG: true

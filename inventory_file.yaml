@@ -1,0 +1,8 @@
+---
+
+- name: init inventory_file
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - { role: inventory_file, site_info: "{{ SITE_INFO }}", children: "{{ CHILDREN }}"}
+    

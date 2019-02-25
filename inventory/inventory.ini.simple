@@ -30,5 +30,3 @@
 [k8s:children]
 k8s_master
 k8s_work
-
-

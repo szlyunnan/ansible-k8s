@@ -1,0 +1,11 @@
+---
+
+- name: generate project inventory file
+  ini_file:
+    path: "{{ playbook_dir }}/inventory/inventory.ini"
+    section: "{{ section }}"
+    option: "{{ item.value.ip }}"
+    state: present
+    allow_no_value: yes
+  with_dict: "{{ value }}"
+  
