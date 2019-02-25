@@ -1,0 +1,34 @@
+# Ansible Invenrory File
+
+# If you want to deploy distributed on a node
+#   You need to be configured as follows
+
+[k8s_master]
+192.168.3.24
+192.168.3.25
+192.168.3.26
+
+[k8s_work]
+192.168.3.27
+192.168.3.28
+192.168.3.29
+
+[etcd]
+192.168.3.24
+192.168.3.25
+192.168.3.26
+
+[proxy]
+192.168.3.27
+192.168.3.28
+192.168.3.29
+
+[keepalived]
+
+[k8s_work_add]
+
+[k8s:children]
+k8s_master
+k8s_work
+
+

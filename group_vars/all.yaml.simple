@@ -1,0 +1,216 @@
+---
+
+################################ CLUSTER INFO ##########################
+# cluster default use domain request
+# if Lan is not domain service  used linux hosts to parsing domain
+# HOSTS_TAG: true used linux hosts to parsing domain
+HOSTS_TAG: true
+k8s_master:
+  master01:
+    ip: 192.168.3.24
+  master02:
+    ip: 192.168.3.25
+  master03:
+    ip: 192.168.3.26
+    
+k8s_node:
+  node01:
+    ip: 192.168.3.27
+  node02:
+    ip: 192.168.3.28
+  node03:
+    ip: 192.168.3.29
+
+etcd_cluster:
+  etcd01:
+    ip: 192.168.3.24
+  etcd02:
+    ip: 192.168.3.25
+  etcd03:
+    ip: 192.168.3.26
+
+proxy_cluster:
+  proxy01:
+    ip: 192.168.3.27
+  proxy02:
+    ip: 192.168.3.28
+  proxy03: 
+    ip: 192.168.3.29
+
+vip: 192.168.1.1
+
+
+################################ BASE ##########################
+# run work
+RUN_WORK: "/var/run"
+# app work
+APP_WORK: "/opt/kubernetes"
+# bin work
+BIN_WORK: "/usr/local/bin"
+# systemd service work
+LIB_WORK: "/usr/lib/systemd/system"
+# domain
+DOMAIN: "test.co"
+# kubernetes cni
+KUBE_N: "10.254.0"
+KUBE_CNI: "{{ KUBE_N }}.0/16"
+# kubernetes cluster gateway
+# KUBE_GATEWAY: "{{ KUBE_N }}.1"
+# kubernetes cluster dns domain 
+# KUBE_DNS: "k8s-dns.{{ DOMAIN }}"
+KUBE_DNS: "{{ KUBE_N }}.2"
+# network card enp0s8 ens37 ens33 ens34
+# NETWORK_CARD: "enp0s8"
+NETWORK_CARD: "ens34"
+# kube add ons info file
+KUBE_ADDONS_INFO: "/tmp/addons.info"
+
+################################ CA ##########################
+# ca expriry default 10 year
+EXPIRY_TIME: "876000h"
+# ca region
+CA_REGION: "Shenzhen"
+# kubernetes bootstrap token (head -c 16 /dev/urandom | od -An -t x | tr -d ' ')
+BOOTSTRAP_TOKEN: "e7e9519e3dcdc1030964a23e95be008b"
+
+
+################################ ETCD ##########################
+# etcd datadir
+ETCD_WORK: "/var/lib/etcd"
+
+
+################################ KUBERNETES ##########################
+# kube KUBE_TAG used to determine the kubernetes apiserver address
+# default false, it mean one cluster only one kubernetes apiserver
+# if KUBE_TAG=true need give haproxy IP/domain or nginx IP/domain 
+# KUBE_TAG: false
+KUBE_TAG: true
+
+# when  KUBE_TAG=true and you set PROXY, kubernetes apiserver=KUBE_PROXY
+# default not set 
+# if used it, it need one proxy service IP/domain
+# if KUBE_PROXY="127.0.0.1" or KUBE_PROXY="localhost" no need install keepalived
+KUBE_PROXY: "127.0.0.1"
+KUBE_PROXY_PORT: 8443
+
+# when  KUBE_TAG!=false, if set KUBE_APISERVER apiserver={{ KUBE_APISERVER }}, if not set 
+#   kubernetes apiserver address is {{ groups.k8s_master.0 }}
+#     inventory k8s_master group first one
+KUBE_APISERVER: "one-master.{{ DOMAIN }}"
+
+# kubernetes audit log dir
+KUBE_AUDIT: "/var/log/kube-audit"
+# kubernetes version
+KUBERNETES_VERSION: "1.11.1"
+
+############################# kube master
+# apiserver count default 1
+API_COUNT: 3
+
+############################# kube node
+# pause image
+KUBELET_POD_INFRA_CONTAINER: "registry.cn-hangzhou.aliyuncs.com/google-containers/pause-amd64:3.0"
+# kubelet workdir
+KUBELET_WORK: "/var/lib/kubelet"
+
+
+############################################### DOCKER #############################
+# Default 18.03.1 select 17.12.1 or 18.03.1
+DOCKER_VERSION: "18.03.1"
+# systemd or  cgroupfs 
+CGROUP_DRIVE: "systemd"
+# cn registry
+CN_REGISTRY: "https://registry.docker-cn.com"
+# docker work dir default /var/lib/docker
+# DOCKER_WORK: "/data/docker"
+
+
+################################ NETWORK ##########################
+# flannel type
+FLANNEL_TYPE: "host-gw"
+# flannel cni
+FLANNEL_CNI: "10.30.0.0/16"
+
+
+################################ KUBERNSTES HA ##########################
+# ha_server 2 paras haproxy and nginx
+HA_SERVER: "haproxy"
+
+################################ HAPROXY 
+# haproxy work
+HAPROXY_WORK: "/var/lib/haproxy"
+# haproxy run
+HAPROXY_RUN: "/run/haproxy"
+# haproxy log
+HAPROXY_LOG: "/var/log/haproxy"
+# haproxy etc
+HAPROXY_ETC: "/etc/haproxy"
+
+################################ NGINX 
+# nginx etc
+NGINX_ETC: "/etc/nginx"
+# nginx log
+NGINX_LOG: "/var/log/ngxin"
+
+################################ KEEPALIVED
+# if install keepalived
+KUBE_KEEPALIVED: false
+# keepalived etc
+KEEPALIVED_ETC: "/etc/keepalived"
+# interface vrrp interface
+# KEEPALIVED_VRRP_INTERFACE: ""
+
+################################ KUBE-ADDONS ##########################
+# coredns
+COREDNS:
+  image: "registry.cn-hangzhou.aliyuncs.com/google_containers/coredns:1.1.3"
+
+# dashboard 
+DASHBOARD:
+  image: "registry.cn-hangzhou.aliyuncs.com/kube_containers/kubernetes-dashboard-amd64:v1.8.3"
+  nodeport: 30001
+  web_url: "k8s-dashboard.{{ DOMAIN }}"
+
+# traefik 
+TRAEFIK: 
+  image: "traefik"
+  web_url: "traefik-dashboard.{{ DOMAIN }}"
+  label_key: "traefik"
+  label_value: "proxy"
+  cert_name: "traefik-cert"
+  configmap_name: "traefik-conf"
+
+
+################################ KERNEL ##########################
+# docker harbor
+HARBOR:
+  hostname: "harbor.{{ DOMAIN }}"
+  ui_url_protocol: http
+  ssl_cert: "/data/harbor/cert/server.crt"
+  ssl_cert_key: "/data/harbor/cert/server.key"
+  harbor_admin_password: "Harbor12345" # must more than 10
+
+
+################################ KERNEL ##########################
+# kernetl tag default false, if you want to update kernel; need set it true
+KERNEL_TAG: false
+
+
+################################ FILESYSTEM ##########################
+# use partition disk, only a partition
+
+# disk name
+DISK_NAME: "/dev/sdb"
+# mount path
+MOUNT_PATH: "/data"
+# fstype ext4 ext3 ext2 xfs
+FSTYPE: "xfs"
+
+
+################################ USER PASSWORD ##########################
+# user name
+USER_NAME: "root"
+# user password
+USER_PWD: "123@#$jk@sJE@3d7*&#234@#$sfjl"
+
+
