@@ -1,0 +1,21 @@
+---
+
+- name: import key
+  shell: "rpm --import {{REPO_KEY}}"
+
+- name: install kernel resource
+  yum:
+    name: "{{REPO_URL}}"
+    state: present
+
+- name: update kernel
+  yum:
+    name: kernel-ml
+    state: present
+    enablerepo: "elrepo-kernel"
+
+- name: set boot
+  shell: grub2-set-default 0 && grub2-mkconfig -o /etc/grub2.cfg
+
+- name: reboot system
+  shell: reboot

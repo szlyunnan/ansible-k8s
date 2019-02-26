@@ -1,0 +1,11 @@
+---
+
+- name: disabled selinux
+  selinux:
+    state: disabled
+
+- name: Temporary selinux
+  shell: |
+    /usr/sbin/setenforce 0
+  ignore_errors: True
+    

@@ -1,0 +1,12 @@
+---
+
+- name: ensure a list of packages installed
+  yum:
+    name: "{{ DEPENDENT_PACKAGES }}"
+    state: present
+
+- name: remove a list of packages remote
+  yum:
+    name: "{{ DOCKER_REMOVE_PACKAGES }}"
+  ignore_errors: True
+

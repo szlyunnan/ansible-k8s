@@ -1,0 +1,8 @@
+---
+
+- name: stop and diabled NetworkManager
+  systemd:
+    state: stopped
+    name: NetworkManager
+    enabled: no
+  when: NetworkManager_TAG

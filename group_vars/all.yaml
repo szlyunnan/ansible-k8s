@@ -103,10 +103,6 @@ vip: 192.168.1.1
 
 
 ################################ BASE ##########################
-# base dependent package
-# 基础依赖包
-# DEPENDENT_PACKAGES: [ntp, vim, wget, gcc, gcc-c++, libselinux-python]
-DEPENDENT_PACKAGES: [ntp, vim, wget]
 
 # NetworkManager tag
 # 默认关闭NetworkManager服务
@@ -211,17 +207,6 @@ KUBELET_WORK: "/var/lib/kubelet"
 KUBE_IPVS_TAG: true
 
 ############################################### DOCKER #############################
-# docker old package
-DOCKER_REMOVE_PACKAGES:
-  - docker
-  - docker-client
-  - docker-client-latest
-  - docker-common
-  - docker-latest
-  - docker-latest-logrotate
-  - docker-selinux
-  - docker-engine-selinux
-  - docker-engine
 
 
 # default 18.03.1 select 17.12.1 or 18.03.1
@@ -255,26 +240,6 @@ FLANNEL_CNI: "10.30.0.0/16"
 # kubernetes 高可用默认支持haproxy和nginx，并且KUBE_TAG为true时才生效
 # 选择使用那种应用作为高可用组件，参数 haproxy nginx
 HA_SERVER: "haproxy"
-
-################################ HAPROXY 
-# haproxy work
-HAPROXY_WORK: "/var/lib/haproxy"
-
-# haproxy run
-HAPROXY_RUN: "/run"
-
-# haproxy log
-HAPROXY_LOG: "/var/log/haproxy"
-
-# haproxy etc
-HAPROXY_ETC: "/etc/haproxy"
-
-################################ NGINX 
-# nginx etc
-NGINX_ETC: "/etc/nginx"
-
-# nginx log
-NGINX_LOG: "/var/log/ngxin"
 
 
 ################################ KEEPALIVED
