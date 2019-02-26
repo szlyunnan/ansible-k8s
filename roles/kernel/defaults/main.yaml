@@ -1,0 +1,4 @@
+---
+# kernetl tag default false, if you want to update kernel; need set it true
+# 程序提供升级Linux内核为最新，默认关闭
+KERNEL_TAG: false

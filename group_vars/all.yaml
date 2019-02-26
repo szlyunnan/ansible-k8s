@@ -20,7 +20,6 @@ CHILDREN:
   cluster_node:
     children: [k8s_master, k8s_work, proxy, etcd]
 
-
 # 需要生成hosts 配置解析的应用组
 HOSTS_LIST: [k8s_master, k8s_work, proxy, etcd]
 
@@ -91,10 +90,8 @@ SITE_INFO:
       ip: 192.168.3.28
     glusterfs03:
       ip: 192.168.3.29
-    
-  
+      
 vip: 192.168.1.1
-
 
 ################################ BASE ##########################
 
@@ -189,24 +186,6 @@ CGROUP_DRIVE: "cgroupfs"
 # 选择使用那种应用作为高可用组件，参数 haproxy nginx
 HA_SERVER: "haproxy"
 
-
-################################ NGINX 
-# nginx etc
-NGINX_ETC: "/etc/nginx"
-
-# nginx log
-NGINX_LOG: "/var/log/ngxin"
-
-
-################################ KEEPALIVED
-# if install keepalived
-# 是否为群集安装keepalived
-KEEPALIVED:
-  tag: false
-  etc: "/etc/keepalived"
-  vip: ""
-
-
 ################################ KUBE-ADDONS ##########################
 # coredns
 COREDNS:
@@ -264,36 +243,3 @@ EFK:
   fd_image: "netonline/fluentd-elasticsearch:v2.0.4"
   web_url: "kibana.{{ DOMAIN }}"
   nodePort: 30004
-
-GLUSTERFS:
-  tag: true 
-  image: ""
-  label_key: "storagenode"
-  label_value: "glusterfs"
-  PACKAGES: [glusterfs, glusterfs-server, glusterfs-fuse, glusterfs-rdma]
-  devices: "/dev/sdb"
-
-
-
-################################ KERNEL ##########################
-# docker harbor
-HARBOR:
-  hostname: "harbor.{{ DOMAIN }}"
-  ui_url_protocol: http
-  ssl_cert: "/data/harbor/cert/server.crt"
-  ssl_cert_key: "/data/harbor/cert/server.key"
-  harbor_admin_password: "Harbor12345" # must more than 10
-
-
-################################ HARBER ##########################
-# kernetl tag default false, if you want to update kernel; need set it true
-# 程序提供升级Linux内核为最新，默认关闭
-KERNEL_TAG: false
-
-################################ USER PASSWORD ##########################
-# 默认提供为linux用户修改密码，使用程序；妥善保管次配置文件
-# user name
-USER_NAME: "root"
-# user password
-USER_PWD: "123@#$jk@sJE@3d7*&#234@#$sfjl"
-
