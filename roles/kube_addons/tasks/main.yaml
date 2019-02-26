@@ -1,0 +1,103 @@
+---
+
+- name: coredns yaml
+  template:
+    src: "{{ playbook_dir }}/kube_addons_template/coredns/kube_coredns.yaml"
+    dest: "/tmp/kube_coredns.yaml"
+
+- name: traefik yaml
+  template:
+    src: "{{ playbook_dir }}/kube_addons_template/traefik/kube_traefik.yaml"
+    dest: "/tmp/kube_traefik.yaml"
+
+- name: traefik toml
+  template:
+    src: "{{ playbook_dir }}/kube_addons_template/traefik/traefik.toml"
+    dest: "{{ APP_WORK }}/config/traefik.toml"
+
+- name: traefik shell
+  template:
+    src: "{{ playbook_dir }}/kube_addons_template/traefik/kube_traefik.sh"
+    dest: "/tmp/kube_traefik.sh"
+
+- name: dashboard yaml
+  template:
+    src: "{{ playbook_dir }}/kube_addons_template/dashboard/kube_dashboard.yaml"
+    dest: "/tmp/kube_dashboard.yaml"
+
+- name: apply -f base addons
+  shell: |
+    kubectl apply -f /tmp/kube_coredns.yaml &&
+    bash /tmp/kube_traefik.sh &&
+    kubectl apply -f /tmp/kube_traefik.yaml &&
+    kubectl apply -f /tmp/kube_dashboard.yaml
+
+
+- name: influxdb yaml
+  template:
+    src: "{{ playbook_dir }}/kube_addons_template/influxdb/influxdb.yaml"
+    dest: "/tmp/influxdb.yaml"
+
+- name: apply -f influxdb
+  shell: |
+    kubectl apply -f /tmp/influxdb.yaml
+
+- name: grafana yaml
+  template:
+    src: "{{ playbook_dir }}/kube_addons_template/grafana/grafana-deployment.yaml"
+    dest: "/tmp/grafana-deployment.yaml"
+
+- name: apply -f grafana
+  shell: |
+    kubectl apply -f /tmp/grafana-deployment.yaml
+
+- name: heapster yaml
+  template:
+    src: "{{ playbook_dir }}/kube_addons_template/heapster/heapster-deployment.yaml"
+    dest: "/tmp/heapster-deployment.yaml"
+
+- name: apply -f heapster
+  shell: |
+    kubectl apply -f /tmp/heapster-deployment.yaml
+
+- name: prometheus yaml
+  template:
+    src: "{{ playbook_dir }}/kube_addons_template/prometheus/{{ item }}"
+    dest: "/tmp/{{ item }}"
+  with_items:
+  - prometheus.deploy.yml
+  - prometheus.config.yml
+  when: PRPMETHEUS.tag
+
+- name: apply -f prometheus
+  shell: |
+    kubectl apply -f /tmp/prometheus.config.yml && 
+    kubectl apply -f /tmp/prometheus.deploy.yml
+  when: PRPMETHEUS.tag
+
+- name: EFK yaml
+  template:
+    src: "{{ playbook_dir }}/kube_addons_template/efk/app/{{ item }}"
+    dest: "/tmp/{{ item }}"
+  with_items:
+  - fluentd-es-ds.yaml
+  - es-statefulset.yaml
+  - kibana-deployment.yaml
+  when: EFK.tag
+
+- name: EFK yaml
+  copy:
+    src: "{{ playbook_dir }}/kube_addons_template/efk/app/fluentd-es-configmap.yaml"
+    dest: "/tmp/fluentd-es-configmap.yaml"
+  when: EFK.tag
+
+
+- name: apply -f EFK
+  shell: |
+    kubectl apply -f /tmp/fluentd-es-configmap.yaml && 
+    kubectl apply -f /tmp/fluentd-es-ds.yaml && 
+    kubectl apply -f /tmp/es-statefulset.yaml && 
+    kubectl apply -f /tmp/kibana-deployment.yaml
+  when: EFK.tag
+
+

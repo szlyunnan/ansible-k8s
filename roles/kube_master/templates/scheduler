@@ -1,0 +1,20 @@
+###
+# kubernetes scheduler config
+# default config should be adequate
+# Add your own!
+
+# kubernetes system config
+KUBE_LOGTOSTDERR="--logtostderr=true"
+
+# journal message level, 0 is debug
+KUBE_LOG_LEVEL="--v=2"
+
+KUBE_MASTER="--master=http://127.0.0.1:8080"
+
+# Should this cluster be allowed to run privileged docker containers
+KUBE_ALLOW_PRIV="--allow-privileged=true"
+
+# KUBE_SCHEDULER_ARGS="--leader-elect=true --address=127.0.0.1 --algorithm-provider=DefaultProvider"
+KUBE_SCHEDULER_ARGS="--address=127.0.0.1 \
+                    --leader-elect=true \
+                    --algorithm-provider=DefaultProvider"

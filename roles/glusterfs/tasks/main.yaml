@@ -1,0 +1,51 @@
+---
+
+
+- name: clean /var/lib/glusterd
+  file:
+    path: /var/lib/glusterd
+    state: absent
+    force: yes
+
+- name: create /var/lib/glusterd
+  file:
+    path: /var/lib/glusterd
+    state: directory
+
+- name: clean /var/lib/heketi
+  file:
+    path: /var/lib/heketi
+    state: absent
+    force: yes
+
+- name: create /var/lib/heketi
+  file:
+    path: /var/lib/heketi
+    state: directory
+
+
+- name: install centos-release-gluster
+  yum:
+    name: centos-release-gluster
+    state: present
+
+- name: install glusterfs glusterfs-server glusterfs-fuse glusterfs-rdma
+  yum:
+    name: "{{ GLUSTERFS.PACKAGES }}"
+    state: present
+
+- name: disable glusterfs-server
+  systemd:
+    state: stopped
+    name: glusterd
+    enabled: no
+
+- name: gluster modules file
+  template: 
+    src: gluster.modules
+    dest: /etc/sysconfig/modules/gluster.modules
+    mode: 0755
+
+- name: execute modules file
+  shell: |
+    bash /etc/sysconfig/modules/gluster.modules

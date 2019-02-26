@@ -1,0 +1,34 @@
+[Unit]
+Description=Docker Application Container Engine
+Documentation=http://docs.docker.com
+After=network.target flannel.service
+Requires=flanneld.service
+
+[Service]
+Type=notify
+EnvironmentFile=-/run/flannel/docker
+EnvironmentFile=-/run/docker_opts.env
+EnvironmentFile=-/run/flannel/subnet.env
+EnvironmentFile=-/etc/sysconfig/docker
+EnvironmentFile=-/etc/sysconfig/docker-storage
+EnvironmentFile=-/etc/sysconfig/docker-network
+EnvironmentFile=-/run/docker_opts.env
+ExecStart=/usr/bin/dockerd \
+    --log-level=error \
+    --log-driver=json-file \
+    --exec-opt native.cgroupdriver={{ CGROUP_DRIVE }} \
+    $DOCKER_NETWORK_OPTIONS
+ExecStartPost=/sbin/iptables -I FORWARD -s 0.0.0.0/0 -j ACCEPT
+ExecReload=/bin/kill -s HUP \$MAINPID
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+TimeoutStartSec=0
+Delegate=yes
+KillMode=process
+Restart=on-failure
+StartLimitBurst=3
+StartLimitInterval=60s
+
+[Install]
+WantedBy=multi-user.target

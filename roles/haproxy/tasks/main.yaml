@@ -26,6 +26,18 @@
     src: haproxy.cfg
     dest: "{{ HAPROXY_ETC }}/haproxy.cfg"
 
+#- name: rsync rsyslog-haproxy.log
+#  template:
+#    src: rsyslog-haproxy.conf
+#    dest: "/etc/rsyslog.d/rsyslog-haproxy.conf"
+
+#- name: set rsyslog 
+#  shell: "{{ item }}"
+#  with_items:
+#  - "sed -i 's/^#$ModLoad imudp/$ModLoad imudp/' /etc/rsyslog.conf"   
+#  - "sed -i 's/^#$UDPServerRun 514/$UDPServerRun 514/' /etc/rsyslog.conf"
+
+
 - name: restart haproxy about service
   systemd:
     state: restarted
@@ -33,5 +45,6 @@
     name: "{{ item }}"
     enabled: yes
   with_items:
+#  - rsyslog
   - haproxy
 

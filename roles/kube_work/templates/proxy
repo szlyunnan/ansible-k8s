@@ -1,0 +1,27 @@
+# Add your own!
+
+KUBE_LOGTOSTDERR="--logtostderr=true"
+
+# journal message level, 0 is debug
+KUBE_LOG_LEVEL="--v=2"
+
+# Should this cluster be allowed to run privileged docker containers
+KUBE_ALLOW_PRIV="--allow-privileged=true"
+
+KUBE_PROXY_ARGS="--bind-address={{ inventory_hostname }} \
+                 {% for key, value in SITE_INFO.k8s_work.items() %}
+                 {% if value.ip == inventory_hostname %}
+        --hostname-override={{ key }}.{{ DOMAIN }} \
+                 {% endif %}
+                 {% endfor %}
+                 --kubeconfig={{ APP_WORK }}/config/kube-proxy.kubeconfig \
+                 {% if KUBE_IPVS_TAG %}
+                 --masquerade-all \
+                 --proxy-mode=ipvs \
+                 --ipvs-min-sync-period=5s \
+                 --ipvs-sync-period=5s \
+                 --ipvs-scheduler=rr \
+                 {% else %}
+                 --proxy-mode=iptables \
+                 {% endif %}
+                 --cluster-cidr={{ KUBE_CNI }}"

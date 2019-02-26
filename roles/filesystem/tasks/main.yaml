@@ -1,0 +1,28 @@
+---
+
+- name: partition
+  parted:
+    device: "{{ DISK_NAME }}"
+    number: 1
+    state: present
+
+- name: create filesystem 
+  filesystem:
+    fstype: "{{ FSTYPE }}"
+    dev: "{{ DISK_NAME }}1"
+
+- name: get disk UUID
+  shell: "/usr/sbin/blkid {{ DISK_NAME }}1"
+  register: DISK_UUID_STRING
+
+- name: set fact DISK_UUID_STRING
+  set_fact:
+    DISK_UUID: "{{ DISK_UUID_STRING.stdout.split('\"').1 }}"
+
+- name: mount up device by UUID
+  mount:
+    path: "{{ MOUNT_PATH }}"
+    src: "UUID={{ DISK_UUID }}"
+    fstype: "{{ FSTYPE }}"
+    opts: defaults
+    state: present

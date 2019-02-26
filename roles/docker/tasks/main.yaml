@@ -1,0 +1,46 @@
+---
+
+- name: remove a list of packages remote for old docker package
+  yum:
+    name: "{{ DOCKER_REMOVE_PACKAGES }}"
+  ignore_errors: True
+
+- name: mkdir docker work
+  file:
+    path: "{{ DOCKER_WORK }}"
+    state: directory
+  when: DOCKER_WORK is defined
+
+- name: remove docker binary to bin work
+  copy: 
+    src: "{{ playbook_dir }}/binary/docker/{{ item }}"
+    dest: "/tmp/"
+  with_items:
+  - "docker-ce-{{ DOCKER_VERSION }}.ce-1.el7.centos.x86_64.rpm"
+
+- name: install docker
+  yum:
+    name: "/tmp/docker-ce-{{ DOCKER_VERSION }}.ce-1.el7.centos.x86_64.rpm"
+    state: present
+
+- name: mkdir /etc/docker
+  file:
+    path: /etc/docker
+    state: directory
+
+- name: rsync daemon.json
+  template:
+    src: daemon.json
+    dest: "/etc/docker/daemon.json"
+
+- name: rsync docker services file
+  template:
+    src: "docker.service"
+    dest: "{{ LIB_WORK }}/docker.service"
+
+- name: restart docker service
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: docker
+    enabled: yes

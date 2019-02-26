@@ -1,16 +1,18 @@
 ---
 
 - name: import key
-  shell: "rpm --import {{REPO_KEY}}"
+  shell: rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
 
 - name: install kernel resource
   yum:
-    name: "{{REPO_URL}}"
+    name: http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
     state: present
+  # shell: rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
 
 - name: update kernel
   yum:
     name: kernel-ml
+    # state: latest
     state: present
     enablerepo: "elrepo-kernel"
 

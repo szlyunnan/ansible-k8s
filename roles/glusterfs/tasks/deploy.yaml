@@ -1,0 +1,37 @@
+---
+
+- name: rsync file
+  copy:
+    src: "{{ playbook_dir }}/binary/heketi"
+    dest: "/tmp"
+
+- name: rsync file
+  template:
+    src: "{{ playbook_dir }}/kube_addons_template/glusterfs/glusterfs.sh"
+    dest: "/tmp/glusterfs.sh"
+    mode: 0755
+
+- name: deployment service
+  shell: |
+    bash /tmp/glusterfs.sh &&
+    kubectl apply -f glusterfs-daemonset.json -n kube-system &&
+    kubectl apply -f heketi-service-account.json  -n kube-system && 
+    kubectl create clusterrolebinding heketi-gluster-admin --clusterrole=edit --serviceaccount=kube-system:heketi-service-account -n kube-system &&
+    kubectl create secret generic heketi-config-secret --from-file=heketi.json -n kube-system && 
+    kubectl apply -f heketi-bootstrap.json -n kube-system  
+  args: 
+    chdir: "/tmp/heketi"
+
+- name: rsync topology file
+  template: 
+    src: "{{ playbook_dir }}/roles/glusterfs/templates/topology-info.json"
+    dest: "/tmp/heketi/topology-info.json"
+
+- name: mount drivices
+  shell: |
+    export HEKETI_CLI_SERVER=http://$(kubectl -n kube-system get svc|grep 'heketi'|awk '{print $3}'):8080 && 
+    tag=true;
+    while $tag;do if [[ "$(kubectl -n kube-system get pods | grep glusterfs|head -n 1|awk '{print $3}')" == "Running" ]];then heketi-cli topology load --json=topology-info.json >> /tmp/heketi/gluster-id; tag=false ;fi ;done
+  args:
+    chdir: "/tmp/heketi"
+

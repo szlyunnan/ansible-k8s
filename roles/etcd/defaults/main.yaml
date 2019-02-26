@@ -1,0 +1,6 @@
+---
+################################ ETCD ##########################
+# etcd datadir
+ETCD_WORK: "/data/etcd"
+
+ETCD_CLEAN: true

@@ -1,0 +1,22 @@
+[Unit]
+Description=Kubernetes Kubelet Server
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=docker.service
+Requires=docker.service
+
+[Service]
+WorkingDirectory={{ KUBELET_WORK }}
+EnvironmentFile=-{{ APP_WORK }}/config/kubelet
+ExecStart={{ BIN_WORK }}/kubelet \
+            $KUBE_LOGTOSTDERR \
+            $KUBE_LOG_LEVEL \
+            $KUBELET_ADDRESS \
+            $KUBELET_PORT \
+            $KUBELET_HOSTNAME \
+            $KUBE_ALLOW_PRIV \
+            $KUBELET_POD_INFRA_CONTAINER \
+            $KUBELET_ARGS
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,12 @@
+---
+
+- name: install keepalived:
+  yum:
+    name: keepalived
+    state: present
+
+- name: 
+
+- name: 
+
+- name: 

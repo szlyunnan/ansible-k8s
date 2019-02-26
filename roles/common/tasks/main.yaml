@@ -1,0 +1,26 @@
+---
+
+- name: clear etcd directory
+  file: 
+    path: "{{ item }}"
+    state: absent
+    force: yes
+  with_items:
+  - "{{ ETCD_WORK }}"
+  - "{{ APP_WORK }}/ssl"
+  - "{{ APP_WORK }}/config"
+  - "{{ APP_WORK }}"
+  - "{{ HAPROXY_WORK }}"
+  when: CLEAR_EK_TAG
+
+- name: mkdir directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+  - "{{ APP_WORK }}"
+  - "{{ ETCD_WORK }}"
+  - "{{ KUBE_AUDIT }}"
+  - "{{ KUBELET_WORK }}"
+  - "{{ APP_WORK }}/ssl"
+  - "{{ APP_WORK }}/config"

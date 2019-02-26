@@ -4,14 +4,4 @@
 # DEPENDENT_PACKAGES: [ntp, vim, wget, gcc, gcc-c++, libselinux-python]
 DEPENDENT_PACKAGES: [ntp, vim, wget]
 
-# docker old package
-DOCKER_REMOVE_PACKAGES:
-  - docker
-  - docker-client
-  - docker-client-latest
-  - docker-common
-  - docker-latest
-  - docker-latest-logrotate
-  - docker-selinux
-  - docker-engine-selinux
-  - docker-engine
+

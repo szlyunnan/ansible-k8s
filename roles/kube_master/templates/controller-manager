@@ -1,0 +1,34 @@
+###
+# The following values are used to configure the kubernetes controller-manager
+# defaults from config and apiserver should be adequate
+# Add your own!
+# kubernetes system config
+KUBE_LOGTOSTDERR="--logtostderr=true"
+
+# journal message level, 0 is debug
+KUBE_LOG_LEVEL="--v=2"
+
+KUBE_MASTER="--master=http://127.0.0.1:8080"
+
+# Should this cluster be allowed to run privileged docker containers
+KUBE_ALLOW_PRIV="--allow-privileged=true"
+
+KUBE_CONTROLLER_MANAGER_ARGS="--bind-address=127.0.0.1 \
+                              --cluster-name=kubernetes \
+                              --cluster-signing-cert-file={{ APP_WORK }}/ssl/ca.pem \
+                              --cluster-signing-key-file={{ APP_WORK }}/ssl/ca-key.pem \
+                              --service-cluster-ip-range={{ KUBE_CNI }} \
+                              --controllers=*,bootstrapsigner,tokencleaner \
+                              --deployment-controller-sync-period=10s \
+                              --experimental-cluster-signing-duration={{ EXPIRY_TIME }}0m0s \
+                              --leader-elect=true \
+                              --node-monitor-grace-period=40s \
+                              --node-monitor-period=5s \
+                              --pod-eviction-timeout=5m0s \
+                              --terminated-pod-gc-threshold=50 \
+                              --horizontal-pod-autoscaler-use-rest-clients=true \
+                              --root-ca-file={{ APP_WORK }}/ssl/ca.pem \
+                              --service-account-private-key-file={{ APP_WORK }}/ssl/ca-key.pem \
+                              --use-service-account-credentials=true \
+                              --feature-gates=RotateKubeletServerCertificate=true"
+                                

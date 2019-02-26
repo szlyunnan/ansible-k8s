@@ -8,7 +8,9 @@
     state: present
     reload: yes
   with_items:
-    "{{ SYSCTL_CONF }}"
+    - net.bridge.bridge-nf-call-ip6tables
+    - net.bridge.bridge-nf-call-iptables
+    - net.ipv4.ip_forward
 
 - name: tmp
   shell: sysctl -p

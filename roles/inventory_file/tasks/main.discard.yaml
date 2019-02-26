@@ -6,19 +6,13 @@
     state: absent
 
 - name: run analysis
-  include_tasks: analysis_para.yaml 
-  vars:
-    section: "{{ outer_item.key }}" 
-    value: "{{ outer_item.value }}"
+  include_tasks: analysis_para.yaml section="{{ outer_item.key }}" value="{{ outer_item.value }}"
   with_dict: "{{ site_info }}"
   loop_control:
     loop_var: outer_item
   
 - name: run analysis
-  include_tasks: children.yaml 
-  vars:
-    section: "{{ children_item.key }}" 
-    value: "{{ children_item.value }}"
+  include_tasks: children.yaml section="{{ children_item.key }}" value="{{ children_item.value }}"
   with_dict: "{{ children }}"
   loop_control:
     loop_var: children_item

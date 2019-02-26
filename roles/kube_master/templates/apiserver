@@ -1,0 +1,77 @@
+###
+# kubernetes system config
+#
+# The following values are used to configure the kube-apiserver
+#
+
+# kubernetes system config
+KUBE_LOGTOSTDERR="--logtostderr=true"
+
+# journal message level, 0 is debug
+KUBE_LOG_LEVEL="--v=2"
+
+# Should this cluster be allowed to run privileged docker containers
+KUBE_ALLOW_PRIV="--allow-privileged=true"
+
+# The address on the local server to listen to.
+KUBE_API_ADDRESS="--advertise-address={{ inventory_hostname }} \
+                  --bind-address={{ inventory_hostname }} \
+                  --insecure-bind-address=127.0.0.1 \
+                  --insecure-port=8080"
+
+# The port on the local server to listen on.
+KUBE_API_PORT="--secure-port=6443"
+
+# Port minions listen on
+# KUBELET_PORT="--kubelet-port=10250"
+
+# Comma separated list of nodes in the etcd cluster
+KUBE_ETCD_SERVERS="--etcd-servers={{ FLANNEL_ETCD_ENDPOINTS }}"
+
+# Address range to use for services
+KUBE_SERVICE_ADDRESSES="--service-cluster-ip-range={{ KUBE_CNI }}"
+
+#
+KUBE_ADMISSION_CONTROL="--enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,DefaultTolerationSeconds,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota,NodeRestriction"
+
+# default admission control policies
+# KUBE_ADMISSION_CONTROL="--admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,DefaultTolerationSeconds,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota,NodeRestriction"
+
+# Add your own!
+
+KUBE_API_ARGS="--anonymous-auth=false \
+              --apiserver-count={{ API_COUNT }} \
+              --audit-log-maxage=30 \
+              --audit-log-maxbackup=3 \
+              --audit-log-maxsize=100 \
+              --audit-log-path={{ KUBE_AUDIT }}/audit.log \
+              --audit-policy-file={{ APP_WORK }}/ssl/audit-policy.yaml \
+              --authorization-mode=Node,RBAC \
+              --client-ca-file={{ APP_WORK }}/ssl/ca.pem \
+              --enable-bootstrap-token-auth \
+              --enable-garbage-collector \
+              --enable-logs-handler \
+              --enable-swagger-ui \
+              --etcd-cafile={{ APP_WORK }}/ssl/ca.pem \
+              --etcd-certfile={{ APP_WORK }}/ssl/kubernetes.pem  \
+              --etcd-keyfile={{ APP_WORK }}/ssl/kubernetes-key.pem \
+              --kubelet-https=true \
+              --kubelet-timeout=3s \
+              --log-flush-frequency=5s \
+              --token-auth-file={{ APP_WORK }}/ssl/token.csv \
+              --tls-cert-file={{ APP_WORK }}/ssl/kubernetes.pem \
+              --tls-private-key-file={{ APP_WORK }}/ssl/kubernetes-key.pem \
+              --service-node-port-range=30000-50000 \
+              --service-account-key-file={{ APP_WORK }}/ssl/ca-key.pem \
+              --storage-backend=etcd3 \
+              --requestheader-client-ca-file={{ APP_WORK }}/ssl/ca.pem  \
+              --requestheader-allowed-names=aggregator,<>  \
+              --requestheader-extra-headers-prefix=X-Remote-Extra- \
+              --requestheader-group-headers=X-Remote-Group \
+              --requestheader-username-headers=X-Remote-User \
+              #--proxy-client-cert-file={{ APP_WORK }}/ssl/front-proxy-client.csr \
+              #--proxy-client-key-file={{ APP_WORK }}/ssl/front-proxy-client.key \
+              --enable-aggregator-routing=true \
+              --enable-swagger-ui=true"      
+              
+                      

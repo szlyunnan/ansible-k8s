@@ -1,0 +1,73 @@
+---
+
+- name: mkdir  playbook_dir/ssl
+  file:
+    path: "{{ playbook_dir }}/ssl"
+    state: directory
+    
+- name: rsync cfssl binariy
+  copy:
+    src: "{{ playbook_dir }}/binary/ca/{{ item }}"
+    dest: "{{ BIN_WORK }}/{{ item }}"
+    mode: 0755
+  with_items:
+  - cfssl
+  - cfssl-certinfo
+  - cfssljson
+
+- name: rsync kubectl
+  copy:
+    src: "{{ playbook_dir }}/binary/kubernetes/master/{{ item }}"
+    dest: "{{ BIN_WORK }}/{{ item }}"
+    mode: 0755
+  with_items:
+  - kubectl
+
+- name: deal ca config 
+  template:
+    src: "{{ item }}"
+    dest: "{{ playbook_dir }}/ssl/{{ item }}"
+  with_items:
+  - admin-csr.json
+  - ca-config.json
+  - ca-csr.json
+  - kube-proxy-csr.json
+  - kubernetes-csr.json
+  - node-kubeconfig.sh 
+  - audit-policy.yaml
+  - token.csv
+
+- name: produce ca file
+  shell: |
+    cfssl gencert -initca ca-csr.json | cfssljson -bare ca
+  args: 
+    chdir: "{{ playbook_dir }}/ssl/"
+
+- name: produce kubernetes ca file
+  shell: |
+    cfssl gencert -ca=ca.pem -ca-key=ca-key.pem \
+    -config=ca-config.json -profile=kubernetes \
+    kubernetes-csr.json | cfssljson -bare kubernetes 
+  args: 
+    chdir: "{{ playbook_dir }}/ssl/"
+
+- name: produce admin ca file
+  shell: |
+    cfssl gencert -ca=ca.pem -ca-key=ca-key.pem \
+    -config=ca-config.json -profile=kubernetes \
+    admin-csr.json | cfssljson -bare admin
+  args: 
+    chdir: "{{ playbook_dir }}/ssl/"
+
+- name: produce admin ca file
+  shell: |
+    cfssl gencert -ca=ca.pem -ca-key=ca-key.pem \
+    -config=ca-config.json -profile=kubernetes \
+    kube-proxy-csr.json | cfssljson -bare kube-proxy 
+  args: 
+    chdir: "{{ playbook_dir }}/ssl/"
+
+- name: produce bootstrap.kubeconfig
+  shell: "bash node-kubeconfig.sh"
+  args: 
+    chdir: "{{ playbook_dir }}/ssl/"

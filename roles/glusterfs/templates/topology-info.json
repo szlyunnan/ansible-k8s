@@ -1,0 +1,60 @@
+{
+    "clusters": [
+        {
+            "nodes": [
+                {% for key, value in SITE_INFO.k8s_work.items() %}
+                {% if value.ip in groups.glusterfs_work %}
+                {% if value.ip != groups.glusterfs_work[groups.glusterfs_work|length - 1] %}
+
+                {
+                    "node": {
+                        "hostnames": {
+                            "manage": [
+                                "{{ key }}.{{ DOMAIN }}"
+                            ],
+                            "storage": [
+                                "{{ value.ip }}"
+                            ]
+                        },
+                        "zone": 1
+                    },
+                    "devices": [
+                        {
+                            "name": "{{ GLUSTERFS.devices}}"
+                        }
+                    ]
+                },
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+
+                {% for key, value in SITE_INFO.k8s_work.items() %}
+                {% if value.ip in groups.glusterfs_work %}
+                {% if value.ip == groups.glusterfs_work[groups.glusterfs_work|length - 1] %}
+
+                {
+                    "node": {
+                        "hostnames": {
+                            "manage": [
+                                "{{ key }}.{{ DOMAIN }}"
+                            ],
+                            "storage": [
+                                "{{ value.ip }}"
+                            ]
+                        },
+                        "zone": 1
+                    },
+                    "devices": [
+                        {
+                            "name": "{{ GLUSTERFS.devices}}"
+                        }
+                    ]
+                }
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+                
+            ]
+        }
+    ]
+}
