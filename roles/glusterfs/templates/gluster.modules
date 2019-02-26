@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-gluster_modules="dm_thin_pool"
-for kernel_module in ${gluster_modules}; do
-    /sbin/modinfo -F filename ${kernel_module} > /dev/null 2>&1
-    if [ $? -eq 0 ]; then
-        modprobe ${kernel_module}
-    fi
-done

@@ -1,13 +1,7 @@
 ---
 
 ################################ CLUSTER INFO ##########################
-# cluster default use domain request
-# if Lan is not domain service  used linux hosts to parsing domain
-# HOSTS_FILE_TAG: true used linux hosts to parsing domain
-# 域名默认处理方式
-# 局域网内部若是没有域名服务器，可以使用linux的hosts文件作为域名解析
-# 配置为true，默认解析方式为linux hosts文件
-HOSTS_FILE_TAG: true
+
 
 # inventory group name
 # 配置为ansible hosts 文件的组名必须为如下，自定义的其他应用除外
@@ -104,16 +98,6 @@ vip: 192.168.1.1
 
 ################################ BASE ##########################
 
-# set time tag
-# 默认支持配置系统时间同步
-TIME:
-  time_tag: true
-  time_server: "0.centos.pool.ntp.org"
-
-# NetworkManager tag
-# 默认关闭NetworkManager服务
-NetworkManager_TAG: true
-
 # run work
 RUN_WORK: "/var/run"
 
@@ -199,35 +183,12 @@ KUBE_IPVS_TAG: true
 # docker  systemd or  cgroupfs 
 CGROUP_DRIVE: "cgroupfs"
 
-################################ NETWORK ##########################
-######## FLANNELD
-# flannel log
-FLANNEL_LOG: "/var/log/flannel"
-
-# flannel type
-FLANNEL_TYPE: "host-gw"
-
-# flannel cni
-FLANNEL_CNI: "10.30.0.0/16"
-
 ################################ KUBERNSTES HA ##########################
 # ha_server 2 paras haproxy and nginx
 # kubernetes 高可用默认支持haproxy和nginx，并且KUBE_TAG为true时才生效
 # 选择使用那种应用作为高可用组件，参数 haproxy nginx
 HA_SERVER: "haproxy"
 
-################################ HAPROXY 
-# haproxy work
-HAPROXY_WORK: "/var/lib/haproxy"
-
-# haproxy run
-HAPROXY_RUN: "/run"
-
-# haproxy log
-HAPROXY_LOG: "/var/log/haproxy"
-
-# haproxy etc
-HAPROXY_ETC: "/etc/haproxy"
 
 ################################ NGINX 
 # nginx etc
@@ -328,20 +289,6 @@ HARBOR:
 # kernetl tag default false, if you want to update kernel; need set it true
 # 程序提供升级Linux内核为最新，默认关闭
 KERNEL_TAG: false
-
-
-################################ FILESYSTEM ##########################
-# use partition disk, only a partition
-# 默认支持针对单个磁盘，分区单个
-# disk name
-DISK_NAME: "/dev/sdb"
-
-# mount path
-MOUNT_PATH: "/data"
-
-# fstype ext4 ext3 ext2 xfs
-FSTYPE: "xfs"
-
 
 ################################ USER PASSWORD ##########################
 # 默认提供为linux用户修改密码，使用程序；妥善保管次配置文件

@@ -5,28 +5,28 @@
     domain: '*'
     limit_type: soft
     limit_item: nofile
-    value: 65536
+    value: "{{PAM_LIMITS}}"
 
 - name: Add or modify hard nofile limits for wildcard domain
   pam_limits:
     domain: '*'
     limit_type: hard
     limit_item: nofile
-    value: 65536
+    value: "{{PAM_LIMITS}}"
 
 - name: Add or modify hard nproc limits for wildcard domain
   pam_limits:
     domain: '*'
     limit_type: soft
     limit_item: nproc
-    value: 65536
+    value: "{{PAM_LIMITS}}"
 
 - name: Add or modify hard nproc limits for wildcard domain
   pam_limits:
     domain: '*'
     limit_type: hard
     limit_item: nproc
-    value: 65536
+    value: "{{PAM_LIMITS}}"
 
 - name: Add or modify memlock, both soft and hard, limit for the user james with a comment.
   pam_limits:

@@ -1,0 +1,6 @@
+---
+# set time tag
+# 默认支持配置系统时间同步
+TIME:
+  time_tag: true
+  time_server: "0.centos.pool.ntp.org"

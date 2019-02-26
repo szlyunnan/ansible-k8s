@@ -1,0 +1,8 @@
+---
+# cluster default use domain request
+# if Lan is not domain service  used linux hosts to parsing domain
+# HOSTS_FILE_TAG: true used linux hosts to parsing domain
+# 域名默认处理方式
+# 局域网内部若是没有域名服务器，可以使用linux的hosts文件作为域名解析
+# 配置为true，默认解析方式为linux hosts文件
+HOSTS_FILE_TAG: true

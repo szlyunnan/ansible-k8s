@@ -1,0 +1,12 @@
+---
+
+# use partition disk, only a partition
+# 默认支持针对单个磁盘，分区单个
+# disk name
+DISK_NAME: "/dev/sdb"
+
+# mount path
+MOUNT_PATH: "/data"
+
+# fstype ext4 ext3 ext2 xfs
+FSTYPE: "xfs"

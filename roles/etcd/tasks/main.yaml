@@ -13,7 +13,7 @@
     path: "{{ ETCD_WORK }}"
     state: directory
 
-- name: remove etcd binary to bin work
+- name: sync etcd binary to bin work
   copy: 
     src: "{{ playbook_dir }}/binary/etcd/{{ item }}"
     dest: "{{ BIN_WORK }}/{{ item }}"

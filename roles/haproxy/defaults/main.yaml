@@ -1,0 +1,12 @@
+---
+# haproxy work
+HAPROXY_WORK: "/data/haproxy"
+
+# haproxy run
+HAPROXY_RUN: "/run"
+
+# haproxy log
+HAPROXY_LOG: "/var/log/haproxy"
+
+# haproxy etc
+HAPROXY_ETC: "/etc/haproxy"

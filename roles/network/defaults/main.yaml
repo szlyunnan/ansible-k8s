@@ -1,0 +1,4 @@
+---
+# NetworkManager tag
+# 默认关闭NetworkManager服务
+NetworkManager_TAG: true

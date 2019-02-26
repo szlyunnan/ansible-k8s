@@ -1,0 +1,9 @@
+######## FLANNELD
+# flannel log
+FLANNEL_LOG: "/var/log/flannel"
+
+# flannel type
+FLANNEL_TYPE: "host-gw"
+
+# flannel cni
+FLANNEL_CNI: "10.30.0.0/16"
