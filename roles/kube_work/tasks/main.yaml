@@ -1,5 +1,17 @@
 ---
 
+- name: clear KUBELET_CLEAN directory
+  file: 
+    path: "{{ KUBELET_WORK }}"
+    state: absent
+    force: yes
+  when: "{{ KUBELET_CLEAN }}"
+
+- name: mkdir directory
+  file:
+    path: "{{ KUBELET_WORK }}"
+    state: directory
+
 - name: rsync kube-node binariy
   copy:
     src: "{{ playbook_dir }}/binary/kubernetes/work/{{ item }}"

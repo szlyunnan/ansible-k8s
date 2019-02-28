@@ -1,5 +1,17 @@
 ---
 
+- name: clear etcd directory
+  file: 
+    path: "{{ KUBE_AUDIT }}"
+    state: absent
+    force: yes
+  when: KUBE_AUDIT_CLEAN
+
+- name: mkdir directory
+  file:
+    path: "{{ KUBE_AUDIT }}"
+    state: directory
+
 - name: rsync kube-master binariy
   copy:
     src: "{{ playbook_dir }}/binary/kubernetes/master/{{ item }}"

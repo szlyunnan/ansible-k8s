@@ -1,0 +1,13 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: es-glusterfs-sc
+provisioner: kubernetes.io/glusterfs
+# reclaimPolicy: Retain
+parameters: 
+  gidMax: "50000"
+  gidMin: "40000"
+  resturl: http://10.254.238.15:8080
+  volumetype: replicate:3
+  restuser: "admin"
+  restuserkey: "123456"

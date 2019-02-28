@@ -1,0 +1,14 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: es-pvc
+  namespace: kube-system
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "es-glusterfs-sc"
+spec:
+  # storageClassName: es-glusterfs-sc
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi

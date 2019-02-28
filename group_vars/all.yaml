@@ -2,7 +2,6 @@
 
 ################################ CLUSTER INFO ##########################
 
-
 # inventory group name
 # 配置为ansible hosts 文件的组名必须为如下，自定义的其他应用除外
 #   也就是说SITE_INFO下面一层的如下配置必须为固定, 还有ip字段
@@ -22,12 +21,6 @@ CHILDREN:
 
 # 需要生成hosts 配置解析的应用组
 HOSTS_LIST: [k8s_master, k8s_work, proxy, etcd]
-
-# domain
-# 局域网内部解析域名，就算不用linux hosts 文件解析；也需要配置。应用使用配置文件
-# 生成的hosts配置文件使用到, 证书使用到, addons 使用到
-
-DOMAIN: "cc.co"
 
 # SITE_INFO 下面一层不能改变
 SITE_INFO:
@@ -90,16 +83,26 @@ SITE_INFO:
       ip: 192.168.3.28
     glusterfs03:
       ip: 192.168.3.29
-      
-vip: 192.168.1.1
+
+# domain
+# 局域网内部解析域名，就算不用linux hosts 文件解析；也需要配置。应用使用配置文件
+# 生成的hosts配置文件使用到, 证书使用到, addons 使用到
+
+DOMAIN: "cc.co"
 
 ################################ BASE ##########################
 
-# run work
-RUN_WORK: "/var/run"
-
 # app work
 APP_WORK: "/opt/kubernetes"
+
+# clear config direcotry
+# 清除的是 APP_WORK 配置的目录
+# 多次运行脚本时是否需要清除老的已存在目录，默认会清理 config 配置目录
+#   同一个环境跑多次的时候，请注意；不要误操作
+CLEAR_EK_TAG: true
+
+# run work
+RUN_WORK: "/var/run"
 
 # bin work
 BIN_WORK: "/usr/local/bin"
@@ -123,58 +126,27 @@ NETWORK_CARD: "ens34"
 # kube add ons info file
 KUBE_ADDONS_INFO: "/tmp/addons.info"
 
-# clear etcd and kubernetes data dir
-# 多次运行脚本时是否需要清除老的已存在目录，默认会清理etcd data kubernetes 配置目录
-#   同一个环境跑多次的时候，请注意；不要误操作
-CLEAR_EK_TAG: true
-
 ################################ KUBERNETES ##########################
-# kube KUBE_TAG used to determine the kubernetes apiserver address
-# default false, it mean one cluster only one kubernetes apiserver
-# if KUBE_TAG=true need give haproxy IP/domain or nginx IP/domain 
 # KUBE_TAG: false
-# 默认为false，表示群集配置单个master节点；
-# 配置为true，表示群集配置多个master节点；必须配置下面KUBE_PROXY参数和port
+# 配置为false, 表示群集部署一个master节点;
+# 配置为true, 表示群集部署多个master节点; 当配置为true时, 
+#   必须配置下面KUBE_PROXY和KUBE_PROXY_PORT参数, 表示为代理apiserver地址和端口
 #   表示为apiserver地址和端口
 KUBE_TAG: true
 
-# when  KUBE_TAG=true and you set PROXY, kubernetes apiserver=KUBE_PROXY
-# default not set 
-# if used it, it need one proxy service IP/domain
-# if KUBE_PROXY="127.0.0.1" or KUBE_PROXY="localhost" no need install keepalived
 # 当KUBE_TAG 为false时，此处配置不生效，
 # 当配置为127.0.0.1 和 localhost 时；默认在本地安装haproxy或者nginx作为代理到apiserver
+# 目前只支持本地安装haproxy或者nginx作为代理到apiserver
 KUBE_PROXY: "127.0.0.1"
 KUBE_PROXY_PORT: 8443
 
-# when  KUBE_TAG!=false, if set KUBE_APISERVER apiserver={{ KUBE_APISERVER }}, if not set 
-#   kubernetes apiserver address is {{ groups.k8s_master.0 }}
-#     inventory k8s_master group first one
 # 当KUBE_TAG 为true时， 此处配置不生效
 # 单个master时，work使用的apiserver地址
 KUBE_APISERVER: "one-master.{{ DOMAIN }}"
 
-# kubernetes audit log dir
-KUBE_AUDIT: "/var/log/kube-audit"
-
 ############################# kube master
 # apiserver count default 1
-API_COUNT: 3
-
-############################# kube work
-# coredns cluster domain
-# kubernetes 服务发现使用内部查询域名
-CLUSTER_DOMAIN: "cluster.local"
-
-# pause image
-KUBELET_POD_INFRA_CONTAINER: "registry.cn-hangzhou.aliyuncs.com/google-containers/pause-amd64:3.0"
-
-# kubelet workdir
-KUBELET_WORK: "/var/lib/kubelet"
-
-# proxy mode
-# 是否启用ipvs, 默认启用
-KUBE_IPVS_TAG: true
+API_COUNT: 1
 
 ################################ DOCKER ##########################
 # docker  systemd or  cgroupfs 
@@ -187,59 +159,10 @@ CGROUP_DRIVE: "cgroupfs"
 HA_SERVER: "haproxy"
 
 ################################ KUBE-ADDONS ##########################
-# coredns
-COREDNS:
-  image: "registry.cn-hangzhou.aliyuncs.com/google_containers/coredns:1.1.3"
-  #image: "coredns/coredns:1.2.5"
-  
-# dashboard 
-DASHBOARD:
-  image: "mirrorgooglecontainers/kubernetes-dashboard-amd64:v1.10.0"
-  nodeport: 30001
-  web_url: "k8s-dashboard.{{ DOMAIN }}"
-
-# traefik 
-TRAEFIK: 
-  image: "traefik:1.7.4-alpine"
-  web_url: "traefik-dashboard.{{ DOMAIN }}"
-  label_key: "traefik"
-  label_value: "proxy"
-  cert_name: "traefik-cert"
-  configmap_name: "traefik-conf"
-
-# ingress keepalived
+# ingress keepalived vip
 INGRESS_KP:
   tag: true
   etc: "/etc/keepalived"
   vip: "192.168.3.200"
   interface: "ens34"
 
-
-# heapster 
-HEAPSTER:
-  image: "mirrorgooglecontainers/heapster-amd64:v1.5.4"
-
-# grafana 
-GRAFANA:
-  image: "mirrorgooglecontainers/heapster-grafana-amd64:v5.0.4"
-  nodePort: 30002
-  web_url: "grafana.{{ DOMAIN }}"
-
-# influxdb 
-INFLUXDB:
-  image: "mirrorgooglecontainers/heapster-influxdb-amd64:v1.5.2"
-
-# prometheus 
-PRPMETHEUS:
-  tag: true
-  image: "prom/prometheus:v2.3.2"
-  nodePort: 30003
-
-# efk 
-EFK:
-  tag: true 
-  es_image: "registry.cn-hangzhou.aliyuncs.com/atos/elasticsearch-oss:6.2.4"
-  ka_image: "registry.cn-beijing.aliyuncs.com/efk-install/kibana-oss:6.2.4"
-  fd_image: "netonline/fluentd-elasticsearch:v2.0.4"
-  web_url: "kibana.{{ DOMAIN }}"
-  nodePort: 30004

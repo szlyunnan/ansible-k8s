@@ -1,0 +1,5 @@
+---
+# kubernetes audit log dir
+KUBE_AUDIT: "/var/log/kube-audit"
+
+KUBE_AUDIT_CLEAN: true

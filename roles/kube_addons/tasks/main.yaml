@@ -32,7 +32,6 @@
     kubectl apply -f /tmp/kube_traefik.yaml &&
     kubectl apply -f /tmp/kube_dashboard.yaml
 
-
 - name: influxdb yaml
   template:
     src: "{{ playbook_dir }}/kube_addons_template/influxdb/influxdb.yaml"
@@ -42,27 +41,29 @@
   shell: |
     kubectl apply -f /tmp/influxdb.yaml
 
-- name: grafana yaml
-  template:
-    src: "{{ playbook_dir }}/kube_addons_template/grafana/grafana-deployment.yaml"
-    dest: "/tmp/grafana-deployment.yaml"
-
-- name: apply -f grafana
-  shell: |
-    kubectl apply -f /tmp/grafana-deployment.yaml
-
 - name: heapster yaml
   template:
-    src: "{{ playbook_dir }}/kube_addons_template/heapster/heapster-deployment.yaml"
+    src: "heapster/heapster-deployment.yaml"
     dest: "/tmp/heapster-deployment.yaml"
 
 - name: apply -f heapster
   shell: |
     kubectl apply -f /tmp/heapster-deployment.yaml
 
+- name: grafana yaml
+  template:
+    src: "{{ playbook_dir }}/kube_addons_template/grafana/grafana-deployment.yaml"
+    dest: "/tmp/grafana-deployment.yaml"
+  when: GRAFANA.tag      
+
+- name: apply -f grafana
+  shell: |
+    kubectl apply -f /tmp/grafana-deployment.yaml
+  when: GRAFANA.tag
+
 - name: prometheus yaml
   template:
-    src: "{{ playbook_dir }}/kube_addons_template/prometheus/{{ item }}"
+    src: "prometheus/{{ item }}"
     dest: "/tmp/{{ item }}"
   with_items:
   - prometheus.deploy.yml
@@ -77,7 +78,7 @@
 
 - name: EFK yaml
   template:
-    src: "{{ playbook_dir }}/kube_addons_template/efk/app/{{ item }}"
+    src: "efk/app/{{ item }}"
     dest: "/tmp/{{ item }}"
   with_items:
   - fluentd-es-ds.yaml
@@ -87,7 +88,7 @@
 
 - name: EFK yaml
   copy:
-    src: "{{ playbook_dir }}/kube_addons_template/efk/app/fluentd-es-configmap.yaml"
+    src: "efk/app/fluentd-es-configmap.yaml"
     dest: "/tmp/fluentd-es-configmap.yaml"
   when: EFK.tag
 
@@ -99,5 +100,3 @@
     kubectl apply -f /tmp/es-statefulset.yaml && 
     kubectl apply -f /tmp/kibana-deployment.yaml
   when: EFK.tag
-
-

@@ -3,5 +3,3 @@
 # 基础依赖包
 # DEPENDENT_PACKAGES: [ntp, vim, wget, gcc, gcc-c++, libselinux-python]
 DEPENDENT_PACKAGES: [ntp, vim, wget]
-
-
