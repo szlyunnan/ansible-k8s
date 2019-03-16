@@ -1,8 +1,0 @@
----
-
-- name: rsync ca file to remote host
-  copy:
-    src: "{{ item }}"
-    dest: "{{ APP_WORK }}/ssl/"
-  with_fileglob:
-  - "{{ playbook_dir }}/ssl/*pem"

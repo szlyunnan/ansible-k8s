@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 kubectl config set-cluster kubernetes \
-  --certificate-authority=ca.pem \
+  --certificate-authority=ca-kube.pem \
   --embed-certs=true \
-  {% if not KUBE_TAG  %}
+  {% if not KUBE_MASTER_CLUSTER  %}
   {% if KUBE_APISERVER|default(false) %}
   --server=https://{{ KUBE_APISERVER }}:6443 \
   {% else %}
@@ -30,9 +30,9 @@ kubectl config set-context default \
 kubectl config use-context default --kubeconfig=bootstrap.kubeconfig
 
 kubectl config set-cluster kubernetes \
-  --certificate-authority=ca.pem \
+  --certificate-authority=ca-kube.pem \
   --embed-certs=true \
-  {% if not KUBE_TAG  %}
+  {% if not KUBE_MASTER_CLUSTER  %}
   {% if KUBE_APISERVER|default(false) %}
   --server=https://{{ KUBE_APISERVER }}:6443 \
   {% else %}

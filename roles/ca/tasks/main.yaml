@@ -1,0 +1,33 @@
+---
+- name: mkdir ca dir
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{CA_BASE_DIR}}"
+    - "{{CA_BASE_DIR}}/kubernetes"
+    - "{{CA_BASE_DIR}}/etcd"
+
+- name: rsync cfssl binariy
+  copy:
+    src: "{{ playbook_dir }}/binary/ca/{{ CA_VERSION }}/{{ item }}"
+    dest: "{{ BIN_WORK }}/{{ item }}"
+    mode: 0755
+  with_items:
+    - cfssl
+    - cfssl-certinfo
+    - cfssljson
+
+- name: rsync kubectl
+  copy:
+    src: "{{ playbook_dir }}/binary/kubernetes/{{ KUBE_VERSION }}/master/{{ item }}"
+    dest: "{{ BIN_WORK }}/{{ item }}"
+    mode: 0755
+  with_items:
+    - kubectl
+
+- name: etcd ca
+  include_tasks: etcd.yml
+
+- name: kube ca
+  include_tasks: kube.yml

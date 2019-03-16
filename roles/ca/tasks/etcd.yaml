@@ -1,0 +1,23 @@
+---
+- name: rsync etcd ca template file
+  template:
+    src: "{{ item }}"
+    dest: "{{CA_BASE_DIR}}/{{ item }}"
+  with_items:
+    - "etcd/ca-config.json"
+    - "etcd/ca-etcd-csr.json"
+    - "etcd/etcd-server-csr.json"
+
+- name: produce etcd ca
+  shell: |
+    cfssl gencert -initca ca-etcd-csr.json | cfssljson -bare ca-etcd
+  args:
+    chdir: "{{CA_BASE_DIR}}/etcd/"
+
+- name: produce etcd ca file
+  shell: |
+    cfssl gencert -ca=ca-etcd.pem -ca-key=ca-etcd-key.pem \
+    -config=ca-etcd-config.json -profile=etcd \
+    etcd-server-csr.json | cfssljson -bare etcd-server
+  args:
+    chdir: "{{CA_BASE_DIR}}/etcd/"

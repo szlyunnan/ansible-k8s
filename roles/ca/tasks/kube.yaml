@@ -1,0 +1,48 @@
+---
+- name: rsync kubernetes ca template file
+  template:
+    src: "{{ item }}"
+    dest: "{{CA_BASE_DIR}}/{{ item }}"
+  with_items:
+    - "kubernetes/ca-config.json"
+    - "kubernetes/ca-kube-csr.json"
+    - "kubernetes/kube-apiserver-csr.json"
+    - "kubernetes/kube-proxy-csr.json"
+    - "kubernetes/admin-csr.json"
+    - "kubernetes/bootstrap-kubeconfig.sh"
+    - "kubernetes/token.csv"
+
+- name: produce kubernetes ca
+  shell: |
+    cfssl gencert -initca ca-kube-csr.json | cfssljson -bare ca-kube
+  args:
+    chdir: "{{CA_BASE_DIR}}/kubernetes/"
+
+- name: produce kube-apiserver ca file
+  shell: |
+    cfssl gencert -ca=ca-kube.pem -ca-key=ca-kube-key.pem \
+    -config=ca-kube-config.json -profile=kubernetes \
+    kube-apiserver-csr.json | cfssljson -bare kube-apiserver
+  args:
+    chdir: "{{CA_BASE_DIR}}/kubernetes/"
+
+- name: produce admin ca file
+  shell: |
+    cfssl gencert -ca=ca-kube.pem -ca-key=ca-kube-key.pem \
+    -config=ca-kube-config.json -profile=kubernetes \
+    admin-csr.json | cfssljson -bare admin
+  args:
+    chdir: "{{CA_BASE_DIR}}/kubernetes/"
+
+- name: produce kube-proxy ca file
+  shell: |
+    cfssl gencert -ca=ca-kube.pem -ca-key=ca-kube-key.pem \
+    -config=ca-kube-config.json -profile=kubernetes \
+    kube-proxy-csr.json | cfssljson -bare kube-proxy
+  args:
+    chdir: "{{CA_BASE_DIR}}/kubernetes/"
+
+- name: produce bootstrap.kubeconfig
+  shell: "bash bootstrap-kubeconfig.sh"
+  args:
+    chdir: "{{CA_BASE_DIR}}/kubernetes/"
