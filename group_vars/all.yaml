@@ -148,3 +148,11 @@ INGRESS_KP:
   etc: "/etc/keepalived"
   vip: "192.168.3.200"
   interface: "ens34"
+
+################################ SSL INFO ##########################
+# ca resource dir
+CA_BASE_DIR: "{{ playbook_dir }}/ssl/ca"
+
+################################ SSL INFO ##########################
+# ca resource dir
+KUBE_VERSION: latest

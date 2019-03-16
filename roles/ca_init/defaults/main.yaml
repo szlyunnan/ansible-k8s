@@ -8,3 +8,6 @@ CA_REGION: "Shenzhen"
 
 # kubernetes bootstrap token (head -c 16 /dev/urandom | od -An -t x | tr -d ' ')
 BOOTSTRAP_TOKEN: "e7e9519e3dcdc1030964a23e95be008b"
+
+# ca binary version
+CA_VERSION: latest
