@@ -1,22 +1,21 @@
 ---
-
 - name: remove a list of packages remote for old docker package
   yum:
     name: "{{ DOCKER_REMOVE_PACKAGES }}"
   ignore_errors: True
 
-- name: mkdir docker work
+- name: mkdir docker data directory
   file:
     path: "{{ DOCKER_WORK }}"
     state: directory
   when: DOCKER_WORK is defined
 
 - name: remove docker binary to bin work
-  copy: 
-    src: "{{ playbook_dir }}/binary/docker/{{ item }}"
+  copy:
+    src: "{{ playbook_dir }}/binary/docker/latest/{{ item }}"
     dest: "/tmp/"
   with_items:
-  - "docker-ce-{{ DOCKER_VERSION }}.ce-1.el7.centos.x86_64.rpm"
+    - "docker-ce-{{ DOCKER_VERSION }}.ce-1.el7.centos.x86_64.rpm"
 
 - name: install docker
   yum:
