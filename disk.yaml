@@ -1,6 +1,0 @@
----
-- name: disk
-  hosts: localhost
-  gather_facts: false
-  roles:
-      - cat_init
