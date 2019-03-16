@@ -1,4 +1,30 @@
 ---
+################################ BASE INFO ##########################
+# kubernetes 群集安装都依赖域名, 默认依赖服务hosts文件,可以使用域名服务解析
+# 当HOSTS_FILE_TAG为true时,使用本地hosts文件解析;false使用DNS服务域名解析
+###################### 注意: 如果使用hosts为解析,请备份好原配置;默认是替换原来的hosts文件
+HOSTS_FILE_TAG: false
+
+# domain
+# 局域网内部解析根域名;就算不用linux hosts文件解析;也需要配置。应用使用配置文件
+# 生成的hosts配置文件使用到,证书使用到,addons 使用到
+# Example
+### DOMAIN: "cc.co"
+DOMAIN: "cc.co"
+# 当使用域名服务解析时,域名配置为
+# 域名配置为SITE_INFO 下一层的儿子层key。
+########################
+## EXAMPLE:
+##  SITE_INFO:
+##    k8s_master:
+##      master01:
+##        ip: 192.168.3.24
+##      master02:
+##        ip: 192.168.3.25
+##      master03:
+##        ip: 192.168.3.26
+##
+## master01.${DOMAIN} --> master01.cc.co
 
 ################################ CLUSTER INFO ##########################
 
@@ -9,9 +35,8 @@
 # k8s_work
 # etcd
 # proxy
-# keepalived
 
-# childre group
+# ansible hosts childre group
 # 组嵌套CHILDREN下面一层的如下配置必须为固定
 CHILDREN:
   k8s_node:
@@ -19,7 +44,7 @@ CHILDREN:
   cluster_node:
     children: [k8s_master, k8s_work, proxy, etcd]
 
-# 需要生成hosts 配置解析的应用组
+# 服务器hosts文件生成依赖SIT_INFO配置,但是最终控制hosts需要生成的信息,是如下配置
 HOSTS_LIST: [k8s_master, k8s_work, proxy, etcd]
 
 # SITE_INFO 下面一层不能改变
@@ -27,68 +52,26 @@ SITE_INFO:
   k8s_master:
     master01:
       ip: 192.168.3.24
-    master02:
-      ip: 192.168.3.25
-    master03:
-      ip: 192.168.3.26
-  
+
   etcd:
     etcd01:
       ip: 192.168.3.24
-    etcd02:
-      ip: 192.168.3.25
-    etcd03:
-      ip: 192.168.3.26
 
   k8s_work:
     work01:
       ip: 192.168.3.27
     work02:
       ip: 192.168.3.28
-    work03:
-      ip: 192.168.3.29
-    master001:
-      ip: 192.168.3.24
-    master002:
-      ip: 192.168.3.25
-    master003:
-      ip: 192.168.3.26
 
   proxy:
     proxy01:
       ip: 192.168.3.27
     proxy02:
       ip: 192.168.3.28
-    proxy03:
-      ip: 192.168.3.29
-    proxy04:
-      ip: 192.168.3.24
-    proxy05:
-      ip: 192.168.3.25
-    proxy06:
-      ip: 192.168.3.26
-  
+
   ingress_work:
     ingress01:
       ip: 192.168.3.27
-    ingress02:
-      ip: 192.168.3.28
-    ingress03:
-      ip: 192.168.3.29
-  
-  glusterfs_work:
-    glusterfs01:
-      ip: 192.168.3.27
-    glusterfs02:
-      ip: 192.168.3.28
-    glusterfs03:
-      ip: 192.168.3.29
-
-# domain
-# 局域网内部解析域名，就算不用linux hosts 文件解析；也需要配置。应用使用配置文件
-# 生成的hosts配置文件使用到, 证书使用到, addons 使用到
-
-DOMAIN: "cc.co"
 
 ################################ BASE ##########################
 
@@ -114,7 +97,7 @@ LIB_WORK: "/usr/lib/systemd/system"
 KUBE_N: "10.254.0"
 KUBE_CNI: "{{ KUBE_N }}.0/16"
 
-# kubernetes cluster dns domain 
+# kubernetes cluster dns domain
 # kubernetes 群集服务发现dns IP
 # KUBE_DNS: "k8s-dns.{{ DOMAIN }}"
 KUBE_DNS: "{{ KUBE_N }}.2"
@@ -127,29 +110,29 @@ NETWORK_CARD: "ens34"
 KUBE_ADDONS_INFO: "/tmp/addons.info"
 
 ################################ KUBERNETES ##########################
-# KUBE_TAG: false
+# KUBE_MASTER_CLUSTER: false
 # 配置为false, 表示群集部署一个master节点;
-# 配置为true, 表示群集部署多个master节点; 当配置为true时, 
+# 配置为true, 表示群集部署多个master节点; 当配置为true时,
 #   必须配置下面KUBE_PROXY和KUBE_PROXY_PORT参数, 表示为代理apiserver地址和端口
 #   表示为apiserver地址和端口
-KUBE_TAG: true
+KUBE_MASTER_CLUSTER: true
 
-# 当KUBE_TAG 为false时，此处配置不生效，
+# 当KUBE_MASTER_CLUSTER 为false时，此处配置不生效，
 # 当配置为127.0.0.1 和 localhost 时；默认在本地安装haproxy或者nginx作为代理到apiserver
 # 目前只支持本地安装haproxy或者nginx作为代理到apiserver
 KUBE_PROXY: "127.0.0.1"
 KUBE_PROXY_PORT: 8443
 
-# 当KUBE_TAG 为true时， 此处配置不生效
+# 当KUBE_MASTER_CLUSTER 为true时， 此处配置不生效
 # 单个master时，work使用的apiserver地址
-KUBE_APISERVER: "one-master.{{ DOMAIN }}"
+KUBE_APISERVER: "one-k8s-master.{{ DOMAIN }}"
 
 ############################# kube master
 # apiserver count default 1
 API_COUNT: 1
 
 ################################ DOCKER ##########################
-# docker  systemd or  cgroupfs 
+# docker  systemd or  cgroupfs
 CGROUP_DRIVE: "cgroupfs"
 
 ################################ KUBERNSTES HA ##########################
@@ -165,4 +148,3 @@ INGRESS_KP:
   etc: "/etc/keepalived"
   vip: "192.168.3.200"
   interface: "ens34"
-

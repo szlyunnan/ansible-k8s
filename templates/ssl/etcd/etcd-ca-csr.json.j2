@@ -1,5 +1,5 @@
 {
-  "CN": "kubernetes",
+  "CN": "etcd",
   "key": {
     "algo": "rsa",
     "size": 2048
@@ -9,11 +9,8 @@
       "C": "CN",
       "ST": "{{ CA_REGION }}",
       "L": "{{ CA_REGION }}",
-      "O": "k8s",
-      "OU": "System"
+      "O": "etcd",
+      "OU": "Etcd Security"
     }
-  ],
-    "ca": {
-       "expiry": "{{ EXPIRY_TIME }}"
-    }
+  ]
 }

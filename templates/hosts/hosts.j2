@@ -1,12 +1,12 @@
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
-{% if not KUBE_TAG %}
+{% if not KUBE_MASTER_CLUSTER %}
 # one master apiserver address
 {{ groups.k8s_master.0 }} {{ KUBE_APISERVER }}
 {% endif %}
 
-{% if KUBE_TAG %}
+{% if KUBE_MASTER_CLUSTER %}
 # harproxy install nodes apiserver address
 127.0.0.1   localhost.{{ DOMAIN }}
 {% endif %}

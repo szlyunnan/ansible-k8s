@@ -1,7 +1,5 @@
 ---
-
 - name: generate hosts file
   template:
-    src: "{{ playbook_dir }}/hosts_templates/hosts.template"
+    src: "{{ playbook_dir }}/templates/hosts/hosts.j2"
     dest: /etc/hosts
-  when: HOSTS_FILE_TAG
