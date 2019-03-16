@@ -31,14 +31,9 @@
     src: "{{ item }}"
     dest: "{{ playbook_dir }}/{{CA_BASE_DIR}}/config/{{ item }}"
   with_items:
-    - admin-csr.json
-    - ca-config.json
-    - ca-csr.json
-    - kube-proxy-csr.json
-    - kubernetes-csr.json
-    - node-kubeconfig.sh
-    - audit-policy.yaml
-    - token.csv
+    - ca-config.json.j2
+    - node-kubeconfig.sh.j2
+    - token.csv.j2
 
 - name: produce ca file
   shell: |
