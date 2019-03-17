@@ -15,8 +15,8 @@ KUBE_ALLOW_PRIV="--allow-privileged=true"
 
 KUBE_CONTROLLER_MANAGER_ARGS="--bind-address=127.0.0.1 \
                               --cluster-name=kubernetes \
-                              --cluster-signing-cert-file={{ APP_WORK }}/ssl/ca.pem \
-                              --cluster-signing-key-file={{ APP_WORK }}/ssl/ca-key.pem \
+                              --cluster-signing-cert-file={{ APP_WORK }}/ssl/kube/ca-kube.pem \
+                              --cluster-signing-key-file={{ APP_WORK }}/ssl/kube/ca-kube-key.pem \
                               --service-cluster-ip-range={{ KUBE_CNI }} \
                               --controllers=*,bootstrapsigner,tokencleaner \
                               --deployment-controller-sync-period=10s \
@@ -27,8 +27,8 @@ KUBE_CONTROLLER_MANAGER_ARGS="--bind-address=127.0.0.1 \
                               --pod-eviction-timeout=5m0s \
                               --terminated-pod-gc-threshold=50 \
                               --horizontal-pod-autoscaler-use-rest-clients=true \
-                              --root-ca-file={{ APP_WORK }}/ssl/ca.pem \
-                              --service-account-private-key-file={{ APP_WORK }}/ssl/ca-key.pem \
+                              --root-ca-file={{ APP_WORK }}/ssl/ca-kube.pem \
+                              --service-account-private-key-file={{ APP_WORK }}/ssl/ca-kube-key.pem \
                               --use-service-account-credentials=true \
                               --feature-gates=RotateKubeletServerCertificate=true"
                                 

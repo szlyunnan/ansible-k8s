@@ -68,7 +68,7 @@ spec:
           containerPort: 8580
           hostPort: 8580
         args:
-        - --configFile={{ APP_WORK }}/config/traefik.toml
+        - --configFile={{ APP_WORK }}/config/kube/traefik.toml
         - --web
         - --web.address=:8580
         - --kubernetes

@@ -26,6 +26,8 @@ DOMAIN: "cc.co"
 ##
 ## master01.${DOMAIN} --> master01.cc.co
 
+TOOLS_TMP_DIR: "/tmp"
+
 ################################ CLUSTER INFO ##########################
 
 # inventory group name
@@ -91,7 +93,7 @@ RUN_WORK: "/var/run"
 BIN_WORK: "/usr/local/bin"
 
 # systemd service work
-LIB_WORK: "/usr/lib/systemd/system"
+SYSTEM_SERVICE_WORK: "/usr/lib/systemd/system"
 
 # kubernetes cni
 KUBE_N: "10.254.0"
@@ -135,6 +137,19 @@ API_COUNT: 1
 # docker  systemd or  cgroupfs
 CGROUP_DRIVE: "cgroupfs"
 
+# docker cn registries
+CN_REGISTRY: ["https://registry.docker-cn.com"]
+
+# docker insecure-registries
+# INSECURE_REGISTRIES: ["myregistrydomain.com:5000"]
+
+# default 18.03.1 select 17.12.1 or 18.03.1
+DOCKER_VERSION: "18.03.1.ce-1.el7.centos"
+
+# docker work dir default /var/lib/docker
+# 当启用了此项配置，会为docker配置data目录指向
+DOCKER_WORK: "/data/docker"
+
 ################################ KUBERNSTES HA ##########################
 # ha_server 2 paras haproxy and nginx
 # kubernetes 高可用默认支持haproxy和nginx，并且KUBE_TAG为true时才生效
@@ -143,7 +158,7 @@ HA_SERVER: "haproxy"
 
 ################################ KUBE-ADDONS ##########################
 # ingress keepalived vip
-INGRESS_KP:
+INGRESS_KEEPALIVED:
   tag: true
   etc: "/etc/keepalived"
   vip: "192.168.3.200"
@@ -153,6 +168,63 @@ INGRESS_KP:
 # ca resource dir
 CA_BASE_DIR: "{{ playbook_dir }}/ssl/ca"
 
-################################ SSL INFO ##########################
+################################ KUBERNETES INFO ##########################
 # ca resource dir
 KUBE_VERSION: latest
+
+################################ KUBE ADDON INFO ##########################
+# coredns
+COREDNS:
+  image: "coredns/coredns:1.3.1"
+
+# dashboard
+DASHBOARD:
+  image: "mirrorgooglecontainers/kubernetes-dashboard-amd64:v1.10.0"
+  nodeport: 30001
+  web_url: "k8s.{{ DOMAIN }}"
+
+# traefik
+TRAEFIK:
+  image: "traefik:1.7.7-alpine"
+  web_url: "traefik.{{ DOMAIN }}"
+  label_key: "traefik"
+  label_value: "proxy"
+  cert_name: "traefik-cert"
+  configmap_name: "traefik-conf"
+
+# heapster
+HEAPSTER:
+  image: "mirrorgooglecontainers/heapster-amd64:v1.5.4"
+
+# grafana
+GRAFANA:
+  tag: false
+  image: "mirrorgooglecontainers/heapster-grafana-amd64:v5.0.4"
+  nodePort: 30002
+  web_url: "grafana.{{ DOMAIN }}"
+
+# influxdb
+INFLUXDB:
+  image: "mirrorgooglecontainers/heapster-influxdb-amd64:v1.5.2"
+
+# prometheus
+PRPMETHEUS:
+  tag: false
+  image: "prom/prometheus:v2.3.2"
+  nodePort: 30003
+
+# efk
+EFK:
+  tag: false
+  es_image: "registry.cn-hangzhou.aliyuncs.com/atos/elasticsearch-oss:6.2.4"
+  ka_image: "registry.cn-beijing.aliyuncs.com/efk-install/kibana-oss:6.2.4"
+  fd_image: "netonline/fluentd-elasticsearch:v2.0.4"
+  web_url: "kibana.{{ DOMAIN }}"
+  nodePort: 30004
+
+################################ TIME INFO ##########################
+# set time tag
+# 默认支持配置系统时间同步
+TIME:
+  time_tag: true
+  time_server: "0.centos.pool.ntp.org"

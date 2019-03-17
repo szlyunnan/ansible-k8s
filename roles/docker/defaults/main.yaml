@@ -12,13 +12,3 @@ DOCKER_REMOVE_PACKAGES:
   - docker-engine
 
 DOCKER_REMOVE_TAG: true
-
-# default 18.03.1 select 17.12.1 or 18.03.1
-DOCKER_VERSION: "18.03.1"
-
-# cn registry
-CN_REGISTRY: "https://registry.docker-cn.com"
-
-# docker work dir default /var/lib/docker
-# 当启用了此项配置，会为docker配置data目录指向
-DOCKER_WORK: "/data/docker"

@@ -1,10 +1,9 @@
 ---
-
 - name: rsync kube-ca-approve.sh
   template:
-    src: "kube-ca-approve.sh"
-    dest: "/tmp/kube-ca-approve.sh"
-    mode: 0755
+      src: "kube-ca-approve.sh"
+      dest: "{{ TOOLS_TMP_DIR }}/kube-ca-approve.sh"
+      mode: 0755
 
 - name: kubectl apply bootstrap
-  shell: "bash /tmp/kube-ca-approve.sh"
+  shell: "bash {{ TOOLS_TMP_DIR }}/kube-ca-approve.sh"

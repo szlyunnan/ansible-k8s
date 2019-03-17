@@ -5,7 +5,7 @@ After=network.target
 After=etcd.service
 
 [Service]
-EnvironmentFile=-{{ APP_WORK }}/config/apiserver
+EnvironmentFile=-{{ APP_WORK }}/config/kube/apiserver
 ExecStart={{ BIN_WORK }}/kube-apiserver \
         $KUBE_LOGTOSTDERR \
         $KUBE_LOG_LEVEL \

@@ -1,61 +1,23 @@
 ---
+- name: include dirs tasks
+  include_tasks: dirs.yaml
 
-- name: clear etcd directory
-  file: 
-    path: "{{ KUBE_AUDIT }}"
-    state: absent
-    force: yes
-  when: KUBE_AUDIT_CLEAN
+- name: include files tasks
+  include_tasks: files.yaml
 
-- name: mkdir directory
-  file:
-    path: "{{ KUBE_AUDIT }}"
-    state: directory
+- name: include cas tasks
+  include_tasks: cas.yaml
 
 - name: rsync kube-master binariy
   copy:
-    src: "{{ playbook_dir }}/binary/kubernetes/master/{{ item }}"
+    src: "{{ playbook_dir }}/binary/kubernetes/{{ KUBE_VERSION }}/{{ item }}"
     dest: "{{ BIN_WORK }}/{{ item }}"
     mode: 0755
   with_items:
-  - kube-apiserver          
-  - kube-controller-manager 
-  - kube-scheduler          
-  - kubectl
-
-- name: rsync heketi-cli
-  copy:
-    src: "{{ playbook_dir }}/binary/kubernetes/master/heketi-cli"
-    dest: "{{ BIN_WORK }}/heketi-cli"
-    mode: 0755
-  when: GLUSTERFS.tag
-
-- name: deal kube-master config 
-  template:
-    src: "{{ item }}"
-    dest: "{{ APP_WORK }}/config/{{ item }}"
-  with_items:
-  - apiserver                            
-  - controller-manager
-  - scheduler
-
-- name: rsync ca file to remote host
-  copy:
-    src: "{{ playbook_dir }}/ssl/{{ item }}"
-    dest: "{{ APP_WORK }}/ssl/"
-  with_items:
-  - audit-policy.yaml
-  - token.csv
-
-
-- name: deal kube-master service file 
-  template:
-    src: "{{ item }}"
-    dest: "{{ LIB_WORK }}/{{ item }}"
-  with_items:
-  - kube-apiserver.service                            
-  - kube-scheduler.service
-  - kube-controller-manager.service
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
+    - kubectl
 
 - name: restart kube-master service
   systemd:
@@ -64,6 +26,6 @@
     name: "{{ item }}"
     enabled: yes
   with_items:
-  - kube-apiserver
-  - kube-scheduler
-  - kube-controller-manager
+    - kube-apiserver
+    - kube-scheduler
+    - kube-controller-manager

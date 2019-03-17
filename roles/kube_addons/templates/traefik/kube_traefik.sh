@@ -29,6 +29,6 @@ kubectl label nodes {{ key }}.{{ DOMAIN }} {{ TRAEFIK.label_key }}={{ TRAEFIK.la
 
 
 
-kubectl create secret generic {{ TRAEFIK.cert_name }} --from-file={{ APP_WORK }}/ssl/ca-key.pem --from-file={{ APP_WORK }}/ssl/ca.pem -n kube-system
+kubectl create secret generic {{ TRAEFIK.cert_name }} --from-file={{ APP_WORK }}/ssl/kube/ca-kube-key.pem --from-file={{ APP_WORK }}/ssl/kube/ca-kube.pem -n kube-system
 
-kubectl create configmap {{ TRAEFIK.configmap_name }} --from-file={{ APP_WORK }}/config/traefik.toml -n kube-system
+kubectl create configmap {{ TRAEFIK.configmap_name }} --from-file={{ APP_WORK }}/config/kube/traefik.toml -n kube-system

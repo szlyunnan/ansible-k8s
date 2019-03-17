@@ -1,0 +1,20 @@
+---
+- name: clear etcd directory
+  file:
+    path: "{{ item }}"
+    state: absent
+    force: yes
+  with_items:
+    - "{{ KUBE_AUDIT }}"
+    - "{{ APP_WORK }}/config/kube"
+    - "{{ APP_WORK }}/ssl/kube"
+  when: KUBE_AUDIT_CLEAN
+
+- name: mkdir directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ KUBE_AUDIT }}"
+    - "{{ APP_WORK }}/config/kube"
+    - "{{ APP_WORK }}/ssl/kube"

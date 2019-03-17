@@ -8,7 +8,7 @@ Documentation=https://github.com/coreos
 [Service]
 Type=notify
 WorkingDirectory={{ ETCD_WORK }}/
-EnvironmentFile=-{{ APP_WORK }}/config/etcd.conf
+EnvironmentFile=-{{ APP_WORK }}/config/etcd/etcd.conf
 ExecStart={{ BIN_WORK }}/etcd \
   --name ${ETCD_NAME} \
   --data-dir=${ETCD_DATA_DIR} \
@@ -18,12 +18,12 @@ ExecStart={{ BIN_WORK }}/etcd \
   --initial-cluster-token ${ETCD_INITIAL_CLUSTER_TOKEN} \
   --initial-cluster ${ETCD_INITIAL_CLUSTER} \
   --initial-cluster-state new \
-  --cert-file={{ APP_WORK }}/ssl/kubernetes.pem \
-  --key-file={{ APP_WORK }}/ssl/kubernetes-key.pem \
-  --peer-cert-file={{ APP_WORK }}/ssl/kubernetes.pem \
-  --peer-key-file={{ APP_WORK }}/ssl/kubernetes-key.pem \
-  --trusted-ca-file={{ APP_WORK }}/ssl/ca.pem \
-  --peer-trusted-ca-file={{ APP_WORK }}/ssl/ca.pem \
+  --cert-file={{ APP_WORK }}/ssl/etcd/etcd-server.pem \
+  --key-file={{ APP_WORK }}/ssl/etcd/etcd-server.pem \
+  --peer-cert-file={{ APP_WORK }}/ssl/etcd/etcd-server.pem \
+  --peer-key-file={{ APP_WORK }}/ssl/etcd/etcd-server.pem \
+  --trusted-ca-file={{ APP_WORK }}/ssl/etcd/ca-etcd.pem \
+  --peer-trusted-ca-file={{ APP_WORK }}/ssl/etcd/ca-etcd.pem \
   --advertise-client-urls ${ETCD_ADVERTISE_CLIENT_URLS} 
   
 Restart=on-failure

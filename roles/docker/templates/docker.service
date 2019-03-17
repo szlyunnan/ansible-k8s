@@ -15,8 +15,6 @@ EnvironmentFile=-/etc/sysconfig/docker-network
 EnvironmentFile=-/run/docker_opts.env
 ExecStart=/usr/bin/dockerd \
     --log-level=error \
-    --log-driver=json-file \
-    --exec-opt native.cgroupdriver={{ CGROUP_DRIVE }} \
     $DOCKER_NETWORK_OPTIONS
 ExecStartPost=/sbin/iptables -I FORWARD -s 0.0.0.0/0 -j ACCEPT
 ExecReload=/bin/kill -s HUP \$MAINPID

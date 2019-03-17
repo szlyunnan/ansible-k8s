@@ -1,5 +1,4 @@
 ---
-
 - name: set linux forwarding and reload if necessary
   sysctl:
     name: "{{ item }}"

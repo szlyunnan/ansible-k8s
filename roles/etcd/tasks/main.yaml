@@ -1,47 +1,16 @@
 ---
-
-
-- name: clear etcd data directory
-  file: 
-    path: "{{ ETCD_WORK }}"
-    state: absent
-    force: yes
-  when: ETCD_CLEAN
-
-- name: mkdir etcd data directory
-  file:
-    path: "{{ ETCD_WORK }}"
-    state: directory
-
 - name: sync etcd binary to bin work
-  copy: 
-    src: "{{ playbook_dir }}/binary/etcd/{{ item }}"
-    dest: "{{ BIN_WORK }}/{{ item }}"
-    mode: 0755
+  copy:
+      src: "{{ playbook_dir }}/binary/etcd/{{ ETCD_VERSION }}/{{ item }}"
+      dest: "{{ BIN_WORK }}/{{ item }}"
+      mode: 0755
   with_items:
-  - etcd
-  - etcdctl
-
-- name: rsync etcd config file
-  template: 
-    src: "etcd.conf"
-    dest: "{{ APP_WORK }}/config/etcd.conf"
-  
-- name: rsync etcd services file
-  template:
-    src: "etcd.service"
-    dest: "{{ LIB_WORK }}/etcd.service"
-
-- name: rsync network.sh file
-  template: 
-    src: "network.sh"
-    dest: "/tmp/network.sh"
+      - etcd
+      - etcdctl
 
 - name: restart etcd service
   systemd:
-    state: restarted
-    daemon_reload: yes
-    name: etcd
-    enabled: yes
-
-    
+      state: restarted
+      daemon_reload: yes
+      name: etcd
+      enabled: yes

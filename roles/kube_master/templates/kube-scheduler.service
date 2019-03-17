@@ -3,7 +3,7 @@ Description=Kubernetes Scheduler Plugin
 Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 
 [Service]
-EnvironmentFile=-{{ APP_WORK }}/config/scheduler
+EnvironmentFile=-{{ APP_WORK }}/config/kube/scheduler
 ExecStart={{ BIN_WORK }}/kube-scheduler \
             $KUBE_LOGTOSTDERR \
             $KUBE_LOG_LEVEL \

@@ -4,7 +4,7 @@ Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 After=network.target
 
 [Service]
-EnvironmentFile=-{{ APP_WORK }}/config/proxy
+EnvironmentFile=-{{ APP_WORK }}/config/kube/proxy
 ExecStart={{ BIN_WORK }}/kube-proxy \
         $KUBE_LOGTOSTDERR \
         $KUBE_LOG_LEVEL \

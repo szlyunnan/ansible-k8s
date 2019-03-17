@@ -1,102 +1,100 @@
 ---
-
 - name: coredns yaml
   template:
-    src: "{{ playbook_dir }}/kube_addons_template/coredns/kube_coredns.yaml"
-    dest: "/tmp/kube_coredns.yaml"
+      src: "coredns/kube_coredns.yaml"
+      dest: "/tmp/kube_coredns.yaml"
 
 - name: traefik yaml
   template:
-    src: "{{ playbook_dir }}/kube_addons_template/traefik/kube_traefik.yaml"
-    dest: "/tmp/kube_traefik.yaml"
+      src: "traefik/kube_traefik.yaml"
+      dest: "{{ TOOLS_TMP_DIR }}/kube_traefik.yaml"
 
 - name: traefik toml
   template:
-    src: "{{ playbook_dir }}/kube_addons_template/traefik/traefik.toml"
-    dest: "{{ APP_WORK }}/config/traefik.toml"
+      src: "traefik/traefik.toml"
+      dest: "{{ APP_WORK }}/config/kube/traefik.toml"
 
 - name: traefik shell
   template:
-    src: "{{ playbook_dir }}/kube_addons_template/traefik/kube_traefik.sh"
-    dest: "/tmp/kube_traefik.sh"
+      src: "traefik/kube_traefik.sh"
+      dest: "{{ TOOLS_TMP_DIR }}/kube_traefik.sh"
 
 - name: dashboard yaml
   template:
-    src: "{{ playbook_dir }}/kube_addons_template/dashboard/kube_dashboard.yaml"
-    dest: "/tmp/kube_dashboard.yaml"
+      src: "dashboard/kube_dashboard.yaml"
+      dest: "{{ TOOLS_TMP_DIR }}/kube_dashboard.yaml"
 
 - name: apply -f base addons
   shell: |
-    kubectl apply -f /tmp/kube_coredns.yaml &&
-    bash /tmp/kube_traefik.sh &&
-    kubectl apply -f /tmp/kube_traefik.yaml &&
-    kubectl apply -f /tmp/kube_dashboard.yaml
+      kubectl apply -f {{ TOOLS_TMP_DIR }}/kube_coredns.yaml &&
+      bash {{ TOOLS_TMP_DIR }}/kube_traefik.sh &&
+      kubectl apply -f {{ TOOLS_TMP_DIR }}/kube_traefik.yaml &&
+      kubectl apply -f {{ TOOLS_TMP_DIR }}/kube_dashboard.yaml
 
 - name: influxdb yaml
   template:
-    src: "{{ playbook_dir }}/kube_addons_template/influxdb/influxdb.yaml"
-    dest: "/tmp/influxdb.yaml"
+      src: "influxdb/influxdb.yaml"
+      dest: "{{ TOOLS_TMP_DIR }}/influxdb.yaml"
 
 - name: apply -f influxdb
   shell: |
-    kubectl apply -f /tmp/influxdb.yaml
+      "kubectl apply -f {{ TOOLS_TMP_DIR }}/influxdb.yaml"
 
 - name: heapster yaml
   template:
-    src: "heapster/heapster-deployment.yaml"
-    dest: "/tmp/heapster-deployment.yaml"
+      src: "heapster/heapster-deployment.yaml"
+      dest: "{{ TOOLS_TMP_DIR }}/heapster-deployment.yaml"
 
 - name: apply -f heapster
   shell: |
-    kubectl apply -f /tmp/heapster-deployment.yaml
+      "kubectl apply -f {{ TOOLS_TMP_DIR }}heapster-deployment.yaml"
 
 - name: grafana yaml
   template:
-    src: "{{ playbook_dir }}/kube_addons_template/grafana/grafana-deployment.yaml"
-    dest: "/tmp/grafana-deployment.yaml"
-  when: GRAFANA.tag      
+      src: "grafana/grafana-deployment.yaml"
+      dest: "{{ TOOLS_TMP_DIR }}/grafana-deployment.yaml"
+  when: GRAFANA.tag
 
 - name: apply -f grafana
   shell: |
-    kubectl apply -f /tmp/grafana-deployment.yaml
+      "kubectl apply -f {{ TOOLS_TMP_DIR }}/grafana-deployment.yaml"
   when: GRAFANA.tag
 
 - name: prometheus yaml
   template:
-    src: "prometheus/{{ item }}"
-    dest: "/tmp/{{ item }}"
+      src: "prometheus/{{ item }}"
+      dest: "{{ TOOLS_TMP_DIR }}/{{ item }}"
   with_items:
-  - prometheus.deploy.yml
-  - prometheus.config.yml
+      - prometheus.deploy.yml
+      - prometheus.config.yml
   when: PRPMETHEUS.tag
 
 - name: apply -f prometheus
   shell: |
-    kubectl apply -f /tmp/prometheus.config.yml && 
-    kubectl apply -f /tmp/prometheus.deploy.yml
+      kubectl apply -f {{ TOOLS_TMP_DIR }}/prometheus.config.yml && 
+      kubectl apply -f {{ TOOLS_TMP_DIR }}/prometheus.deploy.yml
   when: PRPMETHEUS.tag
 
 - name: EFK yaml
   template:
-    src: "efk/app/{{ item }}"
-    dest: "/tmp/{{ item }}"
+      src: "efk/app/{{ item }}"
+      dest: "{{ TOOLS_TMP_DIR }}/{{ item }}"
   with_items:
-  - fluentd-es-ds.yaml
-  - es-statefulset.yaml
-  - kibana-deployment.yaml
+      - fluentd-es-ds.yaml
+      - es-statefulset.yaml
+      - kibana-deployment.yaml
   when: EFK.tag
 
 - name: EFK yaml
   copy:
-    src: "efk/app/fluentd-es-configmap.yaml"
-    dest: "/tmp/fluentd-es-configmap.yaml"
+      src: "efk/app/fluentd-es-configmap.yaml"
+      dest: "{{ TOOLS_TMP_DIR }}/fluentd-es-configmap.yaml"
   when: EFK.tag
-
 
 - name: apply -f EFK
   shell: |
-    kubectl apply -f /tmp/fluentd-es-configmap.yaml && 
-    kubectl apply -f /tmp/fluentd-es-ds.yaml && 
-    kubectl apply -f /tmp/es-statefulset.yaml && 
-    kubectl apply -f /tmp/kibana-deployment.yaml
+      kubectl apply -f {{ TOOLS_TMP_DIR }}/fluentd-es-configmap.yaml && 
+      kubectl apply -f {{ TOOLS_TMP_DIR }}/fluentd-es-ds.yaml && 
+      kubectl apply -f {{ TOOLS_TMP_DIR }}/es-statefulset.yaml && 
+      kubectl apply -f {{ TOOLS_TMP_DIR }}/kibana-deployment.yaml
   when: EFK.tag

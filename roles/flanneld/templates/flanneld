@@ -6,7 +6,7 @@ FLANNEL_ETCD_ENDPOINTS={{ FLANNEL_ETCD_ENDPOINTS }}
 FLANNEL_ETCD_PREFIX="/kube-centos/network"
 
 # Any additional options that you want to pass
-FLANNEL_OPTIONS="--etcd-cafile={{ APP_WORK }}/ssl/ca.pem \
-                --etcd-certfile={{ APP_WORK }}/ssl/kubernetes.pem \
-                --etcd-keyfile={{ APP_WORK }}/ssl/kubernetes-key.pem \
+FLANNEL_OPTIONS="--etcd-cafile={{ APP_WORK }}/ssl/etcd/ca-etcd.pem \
+                --etcd-certfile={{ APP_WORK }}/ssl/etcd/etcd-server.pem \
+                --etcd-keyfile={{ APP_WORK }}/ssl/etcd/etcd-server-key.pem \
                 --iface={{ NETWORK_CARD }}"

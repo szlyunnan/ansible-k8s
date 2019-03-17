@@ -1,0 +1,20 @@
+---
+- name: clear etcd some directory
+  file:
+    path: "{{ item }}"
+    state: absent
+    force: yes
+  with_items:
+    - "{{ ETCD_WORK }}"
+    - "{{ APP_WORK }}/ssl/etcd"
+    - "{{ APP_WORK }}/config/etcd"
+  when: ETCD_CLEAN
+
+- name: mkdir etcd some directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ ETCD_WORK }}"
+    - "{{ APP_WORK }}/ssl/etcd"
+    - "{{ APP_WORK }}/config/etcd"

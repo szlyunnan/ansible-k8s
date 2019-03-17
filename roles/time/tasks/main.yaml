@@ -1,10 +1,8 @@
 ---
-
 - name: set system time zone
   shell: |
     /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime;
     hwclock -w
-  when: TIME.time_tag
 
 - name: set time for cron
   cron:
@@ -12,4 +10,3 @@
     minute: "*/1"
     job: "/usr/sbin/ntpdate {{ TIME.time_server }} > /dev/null 2>&1"
     state: present
-  when: TIME.time_tag

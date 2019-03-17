@@ -10,5 +10,5 @@ defaultEntryPoints = ["http","https"]
   address = ":443"
     [entryPoints.https.tls]
       [[entryPoints.https.tls.certificates]]
-      certFile = "{{ APP_WORK }}/ssl/ca.pem"
-      keyFile = "{{ APP_WORK }}/ssl/ca-key.pem"
+      certFile = "{{ APP_WORK }}/ssl/kube/ca-kube.pem"
+      keyFile = "{{ APP_WORK }}/ssl/kube/ca-kube-key.pem"

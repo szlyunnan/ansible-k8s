@@ -27,14 +27,14 @@ KUBELET_POD_INFRA_CONTAINER="--pod-infra-container-image={{ KUBELET_POD_INFRA_CO
 #
 ## Add your own!
 KUBELET_ARGS="--bootstrap-kubeconfig={{ APP_WORK }}/config/bootstrap.kubeconfig \
-              --cert-dir={{ APP_WORK }}/ssl \
+              --cert-dir={{ APP_WORK }}/ssl/kube \
               --cgroup-driver={{ CGROUP_DRIVE }} \
               --cluster-dns={{ KUBE_DNS }} \
               --cluster-domain={{ CLUSTER_DOMAIN }} \
               --fail--on=false \
               --feature-gates=RotateKubeletClientCertificate=true,RotateKubeletServerCertificate=true \
               --node-labels=node-role.kubernetes.io/k8s-node=true \
-              --kubeconfig={{ APP_WORK }}/config/kubelet.kubeconfig \
+              --kubeconfig={{ APP_WORK }}/config/kube/kubelet.kubeconfig \
               --serialize-image-pulls=false \
               --sync-frequency=30s \
               --rotate-certificates"

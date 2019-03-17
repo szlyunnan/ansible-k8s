@@ -3,7 +3,7 @@ Description=Kubernetes Controller Manager
 Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 
 [Service]
-EnvironmentFile=-{{ APP_WORK }}/config/controller-manager
+EnvironmentFile=-{{ APP_WORK }}/config/kube/controller-manager
 ExecStart={{ BIN_WORK }}/kube-controller-manager \
         $KUBE_LOGTOSTDERR \
         $KUBE_LOG_LEVEL \

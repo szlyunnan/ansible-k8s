@@ -1,0 +1,18 @@
+---
+- name: rsync kube-master config
+  template:
+    src: "{{ item }}"
+    dest: "{{ APP_WORK }}/config/kube/{{ item }}"
+  with_items:
+    - apiserver
+    - controller-manager
+    - scheduler
+
+- name: deal kube-master service file
+  template:
+    src: "{{ item }}"
+    dest: "{{ LIB_WORK }}/{{ item }}"
+  with_items:
+    - kube-apiserver.service
+    - kube-scheduler.service
+    - kube-controller-manager.service

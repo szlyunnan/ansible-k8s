@@ -1,0 +1,73 @@
+{% if INSECURE_REGISTRIES|default(false) %}
+
+{
+    {% if DOCKER_WORK|default(false) %}
+
+    "registry-mirrors": {{ CN_REGISTRY }},
+    "insecure-registries": "{{ insecure-registries }}",
+    "exec-opts": ["native.cgroupdriver={{ CGROUP_DRIVE }}"],
+    "storage-driver": "overlay2",
+    "storage-opts": [
+        "overlay2.override_kernel_check=true"
+    ],
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "100m",
+        "max-file": "3"
+    },
+    "graph": "{{ DOCKER_WORK }}",
+
+    {% else %} 
+
+    "registry-mirrors": {{ CN_REGISTRY }},
+    "insecure-registries": "{{ insecure-registries }}",
+    "exec-opts": ["native.cgroupdriver={{ CGROUP_DRIVE }}"],
+    "storage-driver": "overlay2",
+    "storage-opts": [
+        "overlay2.override_kernel_check=true"
+    ],
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "100m",
+        "max-file": "3"
+    }
+
+    {% endif %}
+}
+
+{% else %}
+
+{
+    {% if DOCKER_WORK|default(false) %}
+
+    "registry-mirrors": {{ CN_REGISTRY }},
+    "exec-opts": ["native.cgroupdriver={{ CGROUP_DRIVE }}"],
+    "storage-driver": "overlay2",
+    "storage-opts": [
+        "overlay2.override_kernel_check=true"
+    ],
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "100m",
+        "max-file": "3"
+    },
+    "graph": "{{ DOCKER_WORK }}",
+
+    {% else %} 
+
+    "registry-mirrors": {{ CN_REGISTRY }},
+    "exec-opts": ["native.cgroupdriver={{ CGROUP_DRIVE }}"],
+    "storage-driver": "overlay2",
+    "storage-opts": [
+        "overlay2.override_kernel_check=true"
+    ],
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "100m",
+        "max-file": "3"
+    }
+
+    {% endif %}
+}
+
+{% endif%}
