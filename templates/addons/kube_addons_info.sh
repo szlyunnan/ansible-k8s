@@ -46,12 +46,3 @@ echo -e "kubernetes dashboard info:" >> ${KUBE_ADDONS_INFO}
 echo -e "\tURL: {{ DASHBOARD.web_url }}" >> ${KUBE_ADDONS_INFO}
 echo -e "\tnodePort: {{ DASHBOARD.nodeport }}\n" >> ${KUBE_ADDONS_INFO}
 echo -e "kubernetes-dashboard-token: \n\t$(kubectl get secret $(kubectl get secret -n kube-system|grep admin-token|awk '{print $1}')  -o jsonpath={.data.token} -n kube-system |base64 -d)\n" >> ${KUBE_ADDONS_INFO}
-
-
-{% if GLUSTERFS.tag %}
-echo -e "glusterfs cluster info:" >> ${KUBE_ADDONS_INFO}
-echo -e "\tID: $(cat heketi/gluster-id | awk '{print $5}'|head -n 1)" >> ${KUBE_ADDONS_INFO}
-echo -e "\tIP: $(kubectl -n kube-system get svc | grep 'heketi' | awk '{print $3}'):8080\n" >> ${KUBE_ADDONS_INFO}
-{% endif %}
-
-

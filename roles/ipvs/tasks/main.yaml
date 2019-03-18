@@ -1,17 +1,15 @@
 ---
-
 - name: install ipvs
   yum:
-    name: ipvsadm
-    state: present
+      name: ipvsadm
+      state: present
 
 - name: ipvs modules file
-  template: 
-    src: ipvs.modules
-    dest: /etc/sysconfig/modules/ipvs.modules
-    mode: 0755
+  template:
+      src: ipvs.modules
+      dest: /etc/sysconfig/modules/ipvs.modules
+      mode: 0755
 
 - name: execute modules file
   shell: |
-    bash /etc/sysconfig/modules/ipvs.modules
-
+      bash /etc/sysconfig/modules/ipvs.modules

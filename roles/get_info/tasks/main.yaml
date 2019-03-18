@@ -1,16 +1,16 @@
 ---
 - name: kube_addons_info.sh
   template:
-      src: "{{ playbook_dir }}/templates/kube_addons_info.sh"
-      dest: "{{ TOOLS_TMP_DIR }}/kube_addons_info.sh"
+        src: "{{ playbook_dir }}/templates/addons/kube_addons_info.sh"
+        dest: "{{ TOOLS_TMP_DIR }}/kube_addons_info.sh"
 
 - shell: |
-      bash kube_addons_info.sh
+        bash kube_addons_info.sh
   args:
-      chdir: "{{ TOOLS_TMP_DIR }}"
+        chdir: "{{ TOOLS_TMP_DIR }}"
 
 - name: get info file
   fetch:
-      src: "{{ KUBE_ADDONS_INFO }}"
-      dest: "{{ playbook_dir }}/log/"
-      flat: yes
+        src: "{{ KUBE_ADDONS_INFO }}"
+        dest: "{{ playbook_dir }}/log/"
+        flat: yes

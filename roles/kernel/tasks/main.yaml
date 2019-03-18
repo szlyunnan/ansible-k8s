@@ -1,5 +1,4 @@
 ---
-
 - name: import key
   shell: rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
 
@@ -7,8 +6,8 @@
   yum:
     name: http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
     state: present
-  # shell: rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
 
+  # shell: rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
 - name: update kernel
   yum:
     name: kernel-ml
