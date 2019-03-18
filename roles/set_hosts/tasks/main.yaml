@@ -1,9 +1,9 @@
 ---
 - name: rsync set_hosts.sh
   template:
-    src: set_hosts.sh.j2
-    dest: "{{ TOOLS_TMP_DIR }}/set_hosts.sh"
+      src: set_hosts.sh.j2
+      dest: "{{ TOOLS_TMP_DIR }}/set_hosts.sh"
 
 - name: do something
   shell: |
-    "bash {{ TOOLS_TMP_DIR }}/set_hosts.sh"
+      bash "{{ TOOLS_TMP_DIR }}/set_hosts.sh"
