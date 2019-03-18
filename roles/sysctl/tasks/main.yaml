@@ -1,7 +1,7 @@
 ---
 - name: modprobe something
   shell: |
-    /usr/sbin/modprobe netfilter
+    /usr/sbin/modprobe br_netfilter
 
 - name: set linux forwarding and reload if necessary
   sysctl:
