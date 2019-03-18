@@ -11,5 +11,9 @@
     - net.bridge.bridge-nf-call-iptables
     - net.ipv4.ip_forward
 
+- name: modprobe something
+  shell: |
+    /usr/sbin/modprobe netfilter
+
 - name: tmp
   shell: sysctl -p
