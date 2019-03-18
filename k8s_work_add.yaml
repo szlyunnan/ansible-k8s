@@ -47,7 +47,7 @@
   hosts: k8s_work_add
   gather_facts: false
   roles:
-    - flannel
+    - flanneld
     - docker
 
 - name: install kubernetes work

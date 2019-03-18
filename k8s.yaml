@@ -3,104 +3,104 @@
   hosts: cluster_node
   gather_facts: false
   roles:
-        - set_fact
-        - base_packages
-        - firewalld
-        - selinux
-        - sysctl
-        - swap
-        - pam_limits
+          - set_fact
+          - base_packages
+          - firewalld
+          - selinux
+          - sysctl
+          - swap
+          - pam_limits
 
 - name: initializing time
   hosts: cluster_node
   gather_facts: false
   roles:
-        - { role: time, when: TIME.tag }
+          - { role: time, when: TIME.tag }
 
 - name: hosts file
   hosts: cluster_node
   gather_facts: false
   roles:
-        - { role: hosts, when: HOSTS_FILE_TAG }
+          - { role: hosts, when: HOSTS_FILE_TAG }
 
 - name: set hosts file
   hosts: cluster_node
   gather_facts: false
   roles:
-        - { role: set_hosts, when: HOSTS_FILE_TAG == false }
+          - { role: set_hosts, when: HOSTS_FILE_TAG == false }
 
 - name: initializing ca
   hosts: localhost
   gather_facts: false
   roles:
-        - ca
+          - ca
 
 - name: install proxy
   hosts: proxy
   gather_facts: false
   vars_files:
-        - "{{ playbook_dir }}/group_vars/all.yaml"
+          - "{{ playbook_dir }}/group_vars/all.yaml"
   roles:
-        - { role: "{{ HA_SERVER }}", when: KUBE_MASTER_CLUSTER }
+          - { role: "{{ HA_SERVER }}", when: KUBE_MASTER_CLUSTER }
 
 - name: install etcd
   hosts: etcd
   gather_facts: false
   roles:
-        - etcd
+          - etcd
 
 - name: install kubernetes master
   hosts: k8s_master
   gather_facts: false
   roles:
-        - kube_master
+          - kube_master
 
 - name: install ipvs
   hosts: k8s_work
   gather_facts: false
   roles:
-        - { role: ipvs, when: KUBE_IPVS_TAG }
+          - { role: ipvs, when: KUBE_IPVS_TAG }
 
 - hosts: "{{ groups.etcd.0 }}"
   tasks:
-        - name: create network
-          shell: "bash {{ TOOLS_TMP_DIR }}/network.sh"
+          - name: create network
+            shell: "bash {{ TOOLS_TMP_DIR }}/network.sh"
 
 - name: install flanneld and docker
   hosts: k8s_work
   gather_facts: false
   roles:
-        - flannel
-        - docker
+          - flanneld
+          - docker
 
 - name: install ingress keepalived
   hosts: ingress_work
   gather_facts: false
   roles:
-        - { role: keepalived_ingress, when: INGRESS_KP.tag }
+          - { role: keepalived_ingress, when: INGRESS_KP.tag }
 
 - name: node-client-auto-approve-csr
   hosts: "{{ groups.k8s_master.0 }}"
   roles:
-        - kube_bootstrap
+          - kube_bootstrap
 
 - name: install kubernetes work
   hosts: k8s_work
   gather_facts: false
   roles:
-        - kube_work
+          - kube_work
 
 - name: kube addons
   hosts: "{{ groups.k8s_master.0 }}"
   roles:
-        - kube_addons
+          - kube_addons
 
 - name: get info
   hosts: "{{ groups.k8s_master.0 }}"
   roles:
-        - get_info
+          - get_info
 
 - hosts: localhost
   tasks:
-        - debug:
-                msg: "you can see {{ playbook_dir }}/log/ some file, to get some info..."
+          - debug:
+                    msg: "you can see {{ playbook_dir }}/log/ some file, to get some info..."
