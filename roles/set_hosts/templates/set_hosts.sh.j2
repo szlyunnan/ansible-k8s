@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+{% if KUBE_MASTER_CLUSTER %}
+{% if KUBE_PROXY == "127.0.0.1"  or KUBE_PROXY == "localhost" %}
+local_domain="localhost.{{ DOMAIN }}"
+{% endif %}
+{% endif %}
+
+function _get_info() {
+    domain_info=$(awk -F" " "/${local_domain}/{print \$2}" hosts)
+}
+
+function _main() {
+    _get_info()
+    if [[ "${domain_info}" == "" ]];then
+        echo "127.0.0.1 ${domain_info} " >> "/etc/hosts"
+    fi
+}
+
+_main()

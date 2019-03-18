@@ -1,15 +1,9 @@
 ---
-- name: register ETCD_CLUSTER_URL
-  shell: "python {{ TOOLS_TMP_DIR }}/set_fact.py ETCD_CLUSTER_URL"
-  register: ETCD_CLUSTER_URL
-  ignore_errors: False
+- name: rsync set_hosts.sh
+  template:
+    src: set_hosts.sh.j2
+    dest: "{{ TOOLS_TMP_DIR }}/set_hosts.sh"
 
-- name: register FLANNEL_ETCD_ENDPOINTS
-  shell: "python {{ TOOLS_TMP_DIR }}/set_fact.py FLANNEL_ETCD_ENDPOINTS"
-  register: FLANNEL_ETCD_ENDPOINTS
-  ignore_errors: False
-
-- name: set fact ETCD_CLUSTER_URL and FLANNEL_ETCD_ENDPOINTS
-  set_fact:
-        ETCD_CLUSTER_URL: "{{ ETCD_CLUSTER_URL.stdout }}"
-        FLANNEL_ETCD_ENDPOINTS: "{{ FLANNEL_ETCD_ENDPOINTS.stdout }}"
+- name: do something
+  shell: |
+    "bash {{ TOOLS_TMP_DIR }}/set_hosts.sh"
