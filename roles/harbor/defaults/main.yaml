@@ -1,0 +1,3 @@
+---
+# docker-compose work
+HAPROXY_WORK: "/data/docker-compos"
