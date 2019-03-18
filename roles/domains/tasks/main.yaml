@@ -1,0 +1,10 @@
+---
+- name: create ansible domains directory
+  file:
+      path: "{{ playbook_dir }}/domains"
+      state: directory
+
+- name: generate hosts file
+  template:
+      src: "{{ playbook_dir }}/templates/domains/domains.j2"
+      dest: "{{ playbook_dir }}/domains/domains"

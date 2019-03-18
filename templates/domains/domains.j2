@@ -1,18 +1,27 @@
+# 域名配置列表
+#################################################################
+#                                                               #
+#   当配置文件参数HOSTS_FILE_TAG为false时, 会自动对此模版进行处理      #
+#   生成一些群集安装需要依赖的域名信息                                #
+#                                                               #
+#################################################################
 
 {% if not KUBE_MASTER_CLUSTER %}
 # one master apiserver address
+# 这个配置域名解析服务器
 {{ groups.k8s_master.0 }} {{ KUBE_APISERVER }}
 {% endif %}
 
 {% if KUBE_MASTER_CLUSTER %}
 # harproxy install nodes apiserver address
+# 这个需要配置在node节点上, 不需要手动配置; 默认会配置
 127.0.0.1   localhost.{{ DOMAIN }}
 {% endif %}
 
 {% for key, value in SITE_INFO.items() %}
 {% if key in HOSTS_LIST %}
 {% for k, v in value.items() %}
-{{ v.ip }} {{ k }} {{ k }}.{{DOMAIN}}
+{{ v.ip }} {{ k }}.{{DOMAIN}}
 {% endfor %}
 
 {% endif %}
