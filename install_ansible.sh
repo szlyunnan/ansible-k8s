@@ -4,7 +4,7 @@ ansible_repo="https://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/ans
 
 function _download_install_repo() {
   yum -y install wget
-  wget /tmp/ansible-2.6.2.repo.rpm
+  wget -O /tmp/ansible-2.6.2.repo.rpm ${ansible_repo}
   yum -y localinstall /tmp/ansible-2.6.2.repo.rpm
   yum makecache
 }
