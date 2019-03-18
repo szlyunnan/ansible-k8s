@@ -1,0 +1,19 @@
+
+{% if not KUBE_MASTER_CLUSTER %}
+# one master apiserver address
+{{ groups.k8s_master.0 }} {{ KUBE_APISERVER }}
+{% endif %}
+
+{% if KUBE_MASTER_CLUSTER %}
+# harproxy install nodes apiserver address
+127.0.0.1   localhost.{{ DOMAIN }}
+{% endif %}
+
+{% for key, value in SITE_INFO.items() %}
+{% if key in HOSTS_LIST %}
+{% for k, v in value.items() %}
+{{ v.ip }} {{ k }} {{ k }}.{{DOMAIN}}
+{% endfor %}
+
+{% endif %}
+{% endfor %}

@@ -1,7 +1,7 @@
 ---
 - name: rsync token file to remote host
   copy:
-    src: "{{ playbook_dir }}/ssl/kube/{{ item }}"
+    src: "{{ CA_BASE_DIR }}/kube/{{ item }}"
     dest: "{{ APP_WORK }}/ssl/kube/"
   with_items:
     - audit-policy.yaml

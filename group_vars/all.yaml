@@ -25,8 +25,42 @@ DOMAIN: "cc.co"
 ##        ip: 192.168.3.26
 ##
 ## master01.${DOMAIN} --> master01.cc.co
+# 若使用域名服务器解析, 请按照本地生成的域名清单配置
+DOMAIN_INVENTORY: "{{ playbook_dir }}/domains"
 
+# 远程临时目录
 TOOLS_TMP_DIR: "/tmp"
+
+# app work
+APP_WORK: "/opt/kubernetes"
+
+# run work
+RUN_WORK: "/var/run"
+
+# bin work
+BIN_WORK: "/usr/local/bin"
+
+# systemd service work
+SYSTEM_SERVICE_WORK: "/usr/lib/systemd/system"
+
+# kubernetes cni
+KUBE_N: "10.254.0"
+KUBE_CNI: "{{ KUBE_N }}.0/16"
+
+# kubernetes cluster dns domain
+# kubernetes 群集服务发现dns IP, 不能修改
+# KUBE_DNS: "k8s-dns.{{ DOMAIN }}"
+KUBE_DNS: "{{ KUBE_N }}.2"
+
+# network card enp0s8 ens37 ens33 ens34
+# 配置flanneld 、keepalived的网络通信网卡，无论几个网卡；都必须选择一个网卡配置
+NETWORK_CARD: "ens34"
+
+# kube add ons info file
+KUBE_ADDONS_INFO: "/tmp/addons.info"
+
+# ca resource dir
+CA_BASE_DIR: "{{ playbook_dir }}/ssl/ca"
 
 ################################ CLUSTER INFO ##########################
 
@@ -75,43 +109,24 @@ SITE_INFO:
     ingress01:
       ip: 192.168.3.27
 
-################################ BASE ##########################
+################################ DOCKER ##########################
+# docker  systemd or  cgroupfs
+CGROUP_DRIVE: "cgroupfs"
 
-# app work
-APP_WORK: "/opt/kubernetes"
+# docker cn registries
+CN_REGISTRY: ["https://registry.docker-cn.com"]
 
-# clear config direcotry
-# 清除的是 APP_WORK 配置的目录
-# 多次运行脚本时是否需要清除老的已存在目录，默认会清理 config 配置目录
-#   同一个环境跑多次的时候，请注意；不要误操作
-CLEAR_EK_TAG: true
+# docker insecure-registries 默认禁用
+# INSECURE_REGISTRIES: ["myregistrydomain.com:5000"]
 
-# run work
-RUN_WORK: "/var/run"
+# docker version 18.03.1.ce-1.el7.centos
+DOCKER_VERSION: "18.03.1.ce-1.el7.centos"
 
-# bin work
-BIN_WORK: "/usr/local/bin"
+# docker work dir default /var/lib/docker
+# 当启用了此项配置，会为docker配置data目录指向
+DOCKER_WORK: "/data/docker"
 
-# systemd service work
-SYSTEM_SERVICE_WORK: "/usr/lib/systemd/system"
-
-# kubernetes cni
-KUBE_N: "10.254.0"
-KUBE_CNI: "{{ KUBE_N }}.0/16"
-
-# kubernetes cluster dns domain
-# kubernetes 群集服务发现dns IP
-# KUBE_DNS: "k8s-dns.{{ DOMAIN }}"
-KUBE_DNS: "{{ KUBE_N }}.2"
-
-# network card enp0s8 ens37 ens33 ens34
-# 配置flanneld 调用的网络通信网卡，无论几个网卡；都必须选择一个网卡配置
-NETWORK_CARD: "ens34"
-
-# kube add ons info file
-KUBE_ADDONS_INFO: "/tmp/addons.info"
-
-################################ KUBERNETES ##########################
+################################ KUBERNETES INFO ##########################
 # KUBE_MASTER_CLUSTER: false
 # 配置为false, 表示群集部署一个master节点;
 # 配置为true, 表示群集部署多个master节点; 当配置为true时,
@@ -133,44 +148,14 @@ KUBE_APISERVER: "one-k8s-master.{{ DOMAIN }}"
 # apiserver count default 1
 API_COUNT: 1
 
-################################ DOCKER ##########################
-# docker  systemd or  cgroupfs
-CGROUP_DRIVE: "cgroupfs"
-
-# docker cn registries
-CN_REGISTRY: ["https://registry.docker-cn.com"]
-
-# docker insecure-registries
-# INSECURE_REGISTRIES: ["myregistrydomain.com:5000"]
-
-# default 18.03.1 select 17.12.1 or 18.03.1
-DOCKER_VERSION: "18.03.1.ce-1.el7.centos"
-
-# docker work dir default /var/lib/docker
-# 当启用了此项配置，会为docker配置data目录指向
-DOCKER_WORK: "/data/docker"
+# kubernetes version
+KUBE_VERSION: latest
 
 ################################ KUBERNSTES HA ##########################
 # ha_server 2 paras haproxy and nginx
 # kubernetes 高可用默认支持haproxy和nginx，并且KUBE_TAG为true时才生效
 # 选择使用那种应用作为高可用组件，参数 haproxy nginx
 HA_SERVER: "haproxy"
-
-################################ KUBE-ADDONS ##########################
-# ingress keepalived vip
-INGRESS_KEEPALIVED:
-  tag: true
-  etc: "/etc/keepalived"
-  vip: "192.168.3.200"
-  interface: "ens34"
-
-################################ SSL INFO ##########################
-# ca resource dir
-CA_BASE_DIR: "{{ playbook_dir }}/ssl/ca"
-
-################################ KUBERNETES INFO ##########################
-# ca resource dir
-KUBE_VERSION: latest
 
 ################################ KUBE ADDON INFO ##########################
 # coredns
@@ -191,6 +176,13 @@ TRAEFIK:
   label_value: "proxy"
   cert_name: "traefik-cert"
   configmap_name: "traefik-conf"
+
+# ingress keepalived vip
+INGRESS_KEEPALIVED:
+  tag: true
+  etc: "/etc/keepalived"
+  vip: "192.168.3.200"
+  interface: "ens34"
 
 # heapster
 HEAPSTER:
@@ -222,9 +214,18 @@ EFK:
   web_url: "kibana.{{ DOMAIN }}"
   nodePort: 30004
 
+# prometheus operator
+PRPMETHEUS_OPERATOR:
+  tag: false
+
 ################################ TIME INFO ##########################
 # set time tag
 # 默认支持配置系统时间同步
 TIME:
-  time_tag: true
-  time_server: "0.centos.pool.ntp.org"
+  tag: true
+  server: "0.centos.pool.ntp.org"
+
+################################ KERNEL INFO ##########################
+# kernetl tag default false, if you want to update kernel; need set it true
+# 程序提供升级Linux内核为最新，默认关闭
+KERNEL_TAG: false

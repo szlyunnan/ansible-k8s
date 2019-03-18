@@ -1,6 +1,7 @@
 {
     "CN": "kubernetes",
     "hosts": [
+        "127.0.0.1",
         "*.{{ DOMAIN }}",
         "{{ KUBE_N }}.1",
         "{{ KUBE_N }}.2",

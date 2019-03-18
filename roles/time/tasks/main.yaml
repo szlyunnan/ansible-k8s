@@ -1,12 +1,12 @@
 ---
 - name: set system time zone
   shell: |
-    /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime;
-    hwclock -w
+      /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime;
+      hwclock -w
 
 - name: set time for cron
   cron:
-    name: update system time
-    minute: "*/1"
-    job: "/usr/sbin/ntpdate {{ TIME.time_server }} > /dev/null 2>&1"
-    state: present
+      name: update system time
+      minute: "*/1"
+      job: "/usr/sbin/ntpdate {{ TIME.server }} > /dev/null 2>&1"
+      state: present
