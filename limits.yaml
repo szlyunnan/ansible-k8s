@@ -1,0 +1,6 @@
+---
+- name: limits
+  hosts: cluster_node
+  gather_facts: false
+  roles:
+      - pam_limits

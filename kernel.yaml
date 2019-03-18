@@ -1,0 +1,7 @@
+---
+
+- name: update kernel
+  hosts: k8s_work
+  gather_facts: false
+  roles:
+    - { role: kernel, when: KERNEL_TAG }

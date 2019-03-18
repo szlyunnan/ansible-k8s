@@ -1,0 +1,7 @@
+---
+
+- name: disk
+  hosts: cluster_node
+  gather_facts: false
+  roles:
+    - filesystem

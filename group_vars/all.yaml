@@ -81,6 +81,7 @@ CHILDREN:
     children: [k8s_master, k8s_work, proxy, etcd]
 
 # 服务器hosts文件生成依赖SIT_INFO配置,但是最终控制hosts需要生成的信息,是如下配置
+# HOSTS_LIST: [k8s_master, k8s_work, proxy, etcd, k8s_work_add]
 HOSTS_LIST: [k8s_master, k8s_work, proxy, etcd]
 
 # SITE_INFO 下面一层不能改变
@@ -108,6 +109,12 @@ SITE_INFO:
   ingress_work:
     ingress01:
       ip: 192.168.3.27
+
+  k8s_work_add:
+    work_add01:
+      ip: 192.168.3.22
+    work_add02:
+      ip: 192.168.3.23
 
 ################################ DOCKER ##########################
 # docker  systemd or  cgroupfs
@@ -151,9 +158,13 @@ API_COUNT: 1
 # kubernetes version
 KUBE_VERSION: latest
 
+# proxy mode
+# 是否启用ipvs, 默认启用
+KUBE_IPVS_TAG: true
+
 ################################ KUBERNSTES HA ##########################
 # ha_server 2 paras haproxy and nginx
-# kubernetes 高可用默认支持haproxy和nginx，并且KUBE_TAG为true时才生效
+# kubernetes 高可用默认支持haproxy和nginx，并且KUBE_MASTER_CLUSTER为true时才生效
 # 选择使用那种应用作为高可用组件，参数 haproxy nginx
 HA_SERVER: "haproxy"
 
@@ -178,7 +189,7 @@ TRAEFIK:
   configmap_name: "traefik-conf"
 
 # ingress keepalived vip
-INGRESS_KEEPALIVED:
+INGRESS_KP:
   tag: true
   etc: "/etc/keepalived"
   vip: "192.168.3.200"

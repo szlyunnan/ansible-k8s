@@ -1,5 +1,6 @@
 ---
 - name: generate hosts file
   template:
-    src: "{{ playbook_dir }}/templates/hosts/hosts.j2"
-    dest: /etc/hosts
+      src: "{{ playbook_dir }}/templates/hosts/hosts.j2"
+      dest: /etc/hosts
+      backup: yes

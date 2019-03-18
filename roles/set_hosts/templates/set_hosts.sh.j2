@@ -11,10 +11,10 @@ function _get_info() {
 }
 
 function _main() {
-    _get_info()
+    _get_info
     if [[ "${domain_info}" == "" ]];then
         echo "127.0.0.1 ${domain_info} " >> "/etc/hosts"
     fi
 }
 
-_main()
+_main
