@@ -1,11 +1,9 @@
 ---
-
 - name: disabled selinux
   selinux:
-    state: disabled
+      state: disabled
 
 - name: Temporary selinux
   shell: |
-    /usr/sbin/setenforce 0
+      /usr/sbin/setenforce 0
   ignore_errors: True
-    

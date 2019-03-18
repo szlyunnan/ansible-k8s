@@ -1,42 +1,42 @@
 ---
 - name: create flanneld log dir
   file:
-      path: "{{ FLANNEL_LOG }}"
-      state: directory
+        path: "{{ FLANNEL_LOG }}"
+        state: directory
 
 - name: remove flannel binary to bin work
   copy:
-      src: "{{ playbook_dir }}/binary/flanneld/{{ FLANNEL_VERSION }}{{ item }}"
-      dest: "{{ BIN_WORK }}/{{ item }}"
-      mode: 0755
+        src: "{{ playbook_dir }}/binary/flanneld/{{ FLANNEL_VERSION }}{{ item }}"
+        dest: "{{ BIN_WORK }}/{{ item }}"
+        mode: 0755
   with_items:
-      - flanneld
-      - mk-docker-opts.sh
+        - flanneld
+        - mk-docker-opts.sh
 
 - name: rsync network.sh file
   template:
-      src: "network.sh"
-      dest: "{{ TOOLS_TMP_DIR }}/network.sh"
+        src: "network.sh"
+        dest: "{{ TOOLS_TMP_DIR }}/network.sh"
 
 - name: exclude network.sh script
   shell: |
-      "bash network.sh"
+        bash network.sh
   args:
-      chdir: "{{ TOOLS_TMP_DIR }}"
+        chdir: "{{ TOOLS_TMP_DIR }}"
 
 - name: rsync flannel config file
   template:
-      src: "flanneld"
-      dest: "{{ APP_WORK }}/config/flanneld/flanneld"
+        src: "flanneld"
+        dest: "{{ APP_WORK }}/config/flanneld/flanneld"
 
 - name: rsync flanneld services file
   template:
-      src: "flanneld.service"
-      dest: "{{ LIB_WORK }}/flanneld.service"
+        src: "flanneld.service"
+        dest: "{{ LIB_WORK }}/flanneld.service"
 
 - name: restart flanneld service
   systemd:
-      state: restarted
-      daemon_reload: yes
-      name: flanneld
-      enabled: yes
+        state: restarted
+        daemon_reload: yes
+        name: flanneld
+        enabled: yes
