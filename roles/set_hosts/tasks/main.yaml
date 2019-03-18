@@ -5,5 +5,4 @@
       dest: "{{ TOOLS_TMP_DIR }}/set_hosts.sh"
 
 - name: do something
-  shell: |
-      bash "{{ TOOLS_TMP_DIR }}/set_hosts.sh"
+  shell: "bash {{ TOOLS_TMP_DIR }}/set_hosts.sh"
