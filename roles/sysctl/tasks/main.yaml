@@ -1,4 +1,8 @@
 ---
+- name: modprobe something
+  shell: |
+    /usr/sbin/modprobe netfilter
+
 - name: set linux forwarding and reload if necessary
   sysctl:
     name: "{{ item }}"
@@ -10,10 +14,6 @@
     - net.bridge.bridge-nf-call-ip6tables
     - net.bridge.bridge-nf-call-iptables
     - net.ipv4.ip_forward
-
-- name: modprobe something
-  shell: |
-    /usr/sbin/modprobe netfilter
 
 - name: tmp
   shell: sysctl -p
