@@ -1,22 +1,19 @@
 ---
-- name: deal directory
-  include_tasks: dirs.yaml
-
 - name: rsync file
   include_tasks: files.yaml
 
 - name: sync etcd binary to bin work
   copy:
-        src: "{{ playbook_dir }}/binary/etcd/{{ ETCD_VERSION }}/{{ item }}"
-        dest: "{{ BIN_WORK }}/{{ item }}"
-        mode: 0755
+    src: "{{ playbook_dir }}/binary/etcd/{{ ETCD_VERSION }}/{{ item }}"
+    dest: "{{ BIN_WORK }}/{{ item }}"
+    mode: 0755
   with_items:
-        - etcd
-        - etcdctl
+    - etcd
+    - etcdctl
 
 - name: restart etcd service
   systemd:
-        state: restarted
-        daemon_reload: yes
-        name: etcd
-        enabled: yes
+    state: restarted
+    daemon_reload: yes
+    name: etcd
+    enabled: yes

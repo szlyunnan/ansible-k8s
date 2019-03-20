@@ -1,7 +1,4 @@
 ---
-- name: include dirs tasks
-  include_tasks: dirs.yaml
-
 - name: include files tasks
   include_tasks: files.yaml
 

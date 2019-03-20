@@ -1,5 +1,3 @@
 ---
-# kubernetes audit log dir
-KUBE_AUDIT: "/var/log/kube-audit"
-
-KUBE_AUDIT_CLEAN: true
+# ca expriry default 100 year
+EXPIRY_TIME: "876000h"

@@ -1,10 +1,10 @@
 ---
-- name: clear KUBELET_CLEAN directory
-  file:
-    path: "{{ KUBELET_WORK }}"
-    state: absent
-    force: yes
-  when: "{{ KUBELET_CLEAN }}"
+#- name: clear KUBELET_CLEAN directory
+#  file:
+#    path: "{{ KUBELET_WORK }}"
+#    state: absent
+#    force: yes
+#  when: KUBELET_CLEAN
 
 - name: mkdir directory
   file:
@@ -30,8 +30,8 @@
 
 - name: rsync bootstrap.kubeconfig to remote host
   copy:
-    src: "{{ playbook_dir }}/ssl/kubernetes/{{ item }}"
-    dest: "{{ APP_WORK }}/config/"
+    src: "{{ playbook_dir }}/ssl/ca/kubernetes/{{ item }}"
+    dest: "{{ APP_WORK }}/config/kube/"
   with_items:
     - bootstrap.kubeconfig
     - kube-proxy.kubeconfig
@@ -39,7 +39,7 @@
 - name: deal kube-node service file
   template:
     src: "{{ item }}"
-    dest: "{{ LIB_WORK }}/{{ item }}"
+    dest: "{{ SYSTEM_SERVICE_WORK }}/{{ item }}"
   with_items:
     - kube-proxy.service
     - kubelet.service

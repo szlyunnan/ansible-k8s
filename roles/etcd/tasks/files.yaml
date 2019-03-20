@@ -1,17 +1,10 @@
 ---
-- name: rsync etcd ca  to remote host
-  copy:
-      src: "{{ item }}"
-      dest: "{{ CA_BASE_DIR }}/etcd/"
-  with_fileglob:
-      - "{{ playbook_dir }}/ssl/etcd/*pem"
-
 - name: rsync etcd config file
   template:
-      src: "etcd.conf"
-      dest: "{{ APP_WORK }}/config/etcd/etcd.conf"
+        src: "etcd.conf"
+        dest: "{{ APP_WORK }}/config/etcd/etcd.conf"
 
 - name: rsync etcd services file
   template:
-      src: "etcd.service"
-      dest: "{{ LIB_WORK }}/etcd.service"
+        src: "etcd.service"
+        dest: "{{ SYSTEM_SERVICE_WORK }}/etcd.service"

@@ -1,0 +1,54 @@
+---
+- name: clear etcd some directory
+  file:
+    path: "{{ item }}"
+    state: absent
+    force: yes
+  with_items:
+    - "{{ ETCD_WORK }}"
+    - "{{ APP_WORK }}/ssl/etcd"
+    - "{{ APP_WORK }}/config/etcd"
+  when: ETCD_CLEAN
+
+- name: mkdir etcd some directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ ETCD_WORK }}"
+    - "{{ APP_WORK }}/ssl/etcd"
+    - "{{ APP_WORK }}/config/etcd"
+
+- name: rsync etcd ca  to remote host
+  copy:
+    src: "{{ item }}"
+    dest: "{{ APP_WORK }}/ssl/etcd/"
+  with_fileglob:
+    - "{{ playbook_dir }}/ssl/ca/etcd/*pem"
+
+- name: clear kube directory
+  file:
+    path: "{{ item }}"
+    state: absent
+    force: yes
+  with_items:
+    - "{{ KUBE_AUDIT }}"
+    - "{{ APP_WORK }}/config/kube"
+    - "{{ APP_WORK }}/ssl/kube"
+  when: KUBE_AUDIT_CLEAN
+
+- name: mkdir directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ KUBE_AUDIT }}"
+    - "{{ APP_WORK }}/config/kube"
+    - "{{ APP_WORK }}/ssl/kube"
+
+- name: rsync kube ca  to remote host
+  copy:
+    src: "{{ item }}"
+    dest: "{{ APP_WORK }}/ssl/kube/"
+  with_fileglob:
+    - "{{ playbook_dir }}/ssl/ca/kubernetes/*pem"

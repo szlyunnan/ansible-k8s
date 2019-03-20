@@ -1,15 +1,8 @@
 ---
 - name: rsync token file to remote host
   copy:
-    src: "{{ CA_BASE_DIR }}/kube/{{ item }}"
+    src: "{{ CA_BASE_DIR }}/kubernetes/{{ item }}"
     dest: "{{ APP_WORK }}/ssl/kube/"
   with_items:
     - audit-policy.yaml
     - token.csv
-
-- name: rsync kubernetes ca  to remote host
-  copy:
-    src: "{{ item }}"
-    dest: "{{ APP_WORK }}/ssl/kube/"
-  with_fileglob:
-    - "{{ playbook_dir }}/ssl/kubernetes/*pem"

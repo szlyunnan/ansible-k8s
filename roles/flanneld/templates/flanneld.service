@@ -8,7 +8,7 @@ Before=docker.service
 
 [Service]
 Type=notify
-EnvironmentFile={{ APP_WORK }}/config/flanneld
+EnvironmentFile={{ APP_WORK }}/config/flanneld/flanneld
 EnvironmentFile=-/etc/sysconfig/kube-centos/docker-network
 ExecStart={{ BIN_WORK }}/flanneld \
   -etcd-endpoints=${FLANNEL_ETCD_ENDPOINTS} \

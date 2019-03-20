@@ -19,9 +19,9 @@ ExecStart={{ BIN_WORK }}/etcd \
   --initial-cluster ${ETCD_INITIAL_CLUSTER} \
   --initial-cluster-state new \
   --cert-file={{ APP_WORK }}/ssl/etcd/etcd-server.pem \
-  --key-file={{ APP_WORK }}/ssl/etcd/etcd-server.pem \
+  --key-file={{ APP_WORK }}/ssl/etcd/etcd-server-key.pem \
   --peer-cert-file={{ APP_WORK }}/ssl/etcd/etcd-server.pem \
-  --peer-key-file={{ APP_WORK }}/ssl/etcd/etcd-server.pem \
+  --peer-key-file={{ APP_WORK }}/ssl/etcd/etcd-server-key.pem \
   --trusted-ca-file={{ APP_WORK }}/ssl/etcd/ca-etcd.pem \
   --peer-trusted-ca-file={{ APP_WORK }}/ssl/etcd/ca-etcd.pem \
   --advertise-client-urls ${ETCD_ADVERTISE_CLIENT_URLS} 

@@ -1,28 +1,22 @@
 ---
-- name: create flanneld log dir
+- name: clean flanneld log dir
   file:
         path: "{{ FLANNEL_LOG }}"
+        state: absent
+
+- name: create flanneld  dir
+  file:
+        path: "{{ APP_WORK }}/config/flanneld"
         state: directory
 
 - name: remove flannel binary to bin work
   copy:
-        src: "{{ playbook_dir }}/binary/flanneld/{{ FLANNEL_VERSION }}{{ item }}"
+        src: "{{ playbook_dir }}/binary/flanneld/{{ FLANNEL_VERSION }}/{{ item }}"
         dest: "{{ BIN_WORK }}/{{ item }}"
         mode: 0755
   with_items:
         - flanneld
         - mk-docker-opts.sh
-
-- name: rsync network.sh file
-  template:
-        src: "network.sh"
-        dest: "{{ TOOLS_TMP_DIR }}/network.sh"
-
-- name: exclude network.sh script
-  shell: |
-        bash network.sh
-  args:
-        chdir: "{{ TOOLS_TMP_DIR }}"
 
 - name: rsync flannel config file
   template:
@@ -32,7 +26,7 @@
 - name: rsync flanneld services file
   template:
         src: "flanneld.service"
-        dest: "{{ LIB_WORK }}/flanneld.service"
+        dest: "{{ SYSTEM_SERVICE_WORK }}/flanneld.service"
 
 - name: restart flanneld service
   systemd:

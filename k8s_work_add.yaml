@@ -3,55 +3,61 @@
   hosts: k8s_work_add
   gather_facts: false
   roles:
-    - set_fact
-    - base_packages
-    - firewalld
-    - selinux
-    - sysctl
-    - swap
-    - pam_limits
+      - set_fact
+      - base_packages
+      - firewalld
+      - selinux
+      - sysctl
+      - swap
+      - pam_limits
 
 - name: initializing time
   hosts: k8s_work_add
   gather_facts: false
   roles:
-    - { role: time, when: TIME.tag }
+      - { role: time, when: TIME.tag }
 
 - name: hosts file
   hosts: k8s_work_add
   gather_facts: false
   roles:
-    - { role: hosts, when: HOSTS_FILE_TAG }
+      - { role: hosts, when: HOSTS_FILE_TAG }
 
 - name: set hosts file
   hosts: k8s_work_add
   gather_facts: false
   roles:
-    - { role: set_hosts, when: HOSTS_FILE_TAG == false }
+      - { role: set_hosts, when: HOSTS_FILE_TAG == false }
+
+- name: ca rsync
+  hosts: k8s_work_add
+  gather_facts: false
+  roles:
+      - ca_rsync
 
 - name: install proxy
   hosts: k8s_work_add
   gather_facts: false
   vars_files:
-    - "{{ playbook_dir }}/group_vars/all.yaml"
+      - "{{ playbook_dir }}/group_vars/all.yaml"
   roles:
-    - { role: "{{ HA_SERVER }}", when: KUBE_MASTER_CLUSTER }
+      - { role: "{{ HA_SERVER }}", when: KUBE_MASTER_CLUSTER }
 
 - name: install ipvs
   hosts: k8s_work_add
   gather_facts: false
   roles:
-    - { role: ipvs, when: KUBE_IPVS_TAG }
+      - { role: ipvs, when: KUBE_IPVS_TAG }
 
 - name: install flanneld and docker
   hosts: k8s_work_add
   gather_facts: false
   roles:
-    - flanneld
-    - docker
+      - flanneld
+      - docker
 
 - name: install kubernetes work
   hosts: k8s_work_add
   gather_facts: false
   roles:
-    - kube_work
+      - kube_work

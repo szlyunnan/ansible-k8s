@@ -1,17 +1,17 @@
 ---
 - name: install keepalived
   yum:
-      name: keepalived
-      state: present
+        name: keepalived
+        state: present
 
 - name: rsync keep cnf
   template:
-      src: keepalived.conf
-      dest: "{{ INGRESS_KEEPALIVED.etc }}/keepalived.conf"
+        src: keepalived.conf
+        dest: "{{ INGRESS_KP.etc }}/keepalived.conf"
 
 - name: start keepalived
   systemd:
-      name: keepalived
-      state: restarted
-      daemon_reload: yes
-      enabled: yes
+        name: keepalived
+        state: restarted
+        daemon_reload: yes
+        enabled: yes

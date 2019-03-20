@@ -47,7 +47,7 @@
 
 - name: apply -f heapster
   shell: |
-    kubectl apply -f "{{ TOOLS_TMP_DIR }}heapster-deployment.yaml"
+    kubectl apply -f "{{ TOOLS_TMP_DIR }}/heapster-deployment.yaml"
 
 - name: grafana yaml
   template:

@@ -4,7 +4,7 @@
     src: "{{ item }}"
     dest: "{{CA_BASE_DIR}}/{{ item }}"
   with_items:
-    - "etcd/ca-config.json"
+    - "etcd/ca-etcd-config.json"
     - "etcd/ca-etcd-csr.json"
     - "etcd/etcd-server-csr.json"
 

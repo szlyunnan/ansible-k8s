@@ -4,13 +4,14 @@
     src: "{{ item }}"
     dest: "{{CA_BASE_DIR}}/{{ item }}"
   with_items:
-    - "kubernetes/ca-config.json"
+    - "kubernetes/ca-kube-config.json"
     - "kubernetes/ca-kube-csr.json"
     - "kubernetes/kube-apiserver-csr.json"
     - "kubernetes/kube-proxy-csr.json"
     - "kubernetes/admin-csr.json"
     - "kubernetes/bootstrap-kubeconfig.sh"
     - "kubernetes/token.csv"
+    - "kubernetes/audit-policy.yaml"
 
 - name: produce kubernetes ca
   shell: |

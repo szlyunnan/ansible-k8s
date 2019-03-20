@@ -52,9 +52,9 @@ KUBE_API_ARGS="--anonymous-auth=false \
               --enable-garbage-collector \
               --enable-logs-handler \
               --enable-swagger-ui \
-              --etcd-cafile={{ APP_WORK }}/ssl/ca.pem \
-              --etcd-certfile={{ APP_WORK }}/ssl/kube/kube-apiserver.pem  \
-              --etcd-keyfile={{ APP_WORK }}/ssl/kube/kube-apiserver-key.pem \
+              --etcd-cafile={{ APP_WORK }}/ssl/etcd/ca-etcd.pem \
+              --etcd-certfile={{ APP_WORK }}/ssl/etcd/etcd-server.pem  \
+              --etcd-keyfile={{ APP_WORK }}/ssl/etcd/etcd-server-key.pem \
               --kubelet-https=true \
               --kubelet-timeout=3s \
               --log-flush-frequency=5s \
@@ -64,7 +64,7 @@ KUBE_API_ARGS="--anonymous-auth=false \
               --service-node-port-range=30000-50000 \
               --service-account-key-file={{ APP_WORK }}/ssl/kube/ca-kube-key.pem \
               --storage-backend=etcd3 \
-              --requestheader-client-ca-file={{ APP_WORK }}/ssl/kube/ca.pem  \
+              --requestheader-client-ca-file={{ APP_WORK }}/ssl/kube/ca-kube.pem  \
               --requestheader-allowed-names=aggregator,<>  \
               --requestheader-extra-headers-prefix=X-Remote-Extra- \
               --requestheader-group-headers=X-Remote-Group \

@@ -35,6 +35,12 @@
   roles:
           - ca
 
+- name: ca rsync
+  hosts: cluster_node
+  gather_facts: false
+  roles:
+          - ca_rsync
+
 - name: install proxy
   hosts: proxy
   gather_facts: false
@@ -60,6 +66,13 @@
   gather_facts: false
   roles:
           - { role: ipvs, when: KUBE_IPVS_TAG }
+
+- hosts: "{{ groups.etcd.0 }}"
+  tasks:
+          - name: rsync network.sh file
+            template:
+                    src: "{{ playbook_dir }}/templates/network/network.sh"
+                    dest: "{{ TOOLS_TMP_DIR }}/network.sh"
 
 - hosts: "{{ groups.etcd.0 }}"
   tasks:

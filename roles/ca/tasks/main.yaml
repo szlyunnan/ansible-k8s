@@ -20,14 +20,14 @@
 
 - name: rsync kubectl
   copy:
-    src: "{{ playbook_dir }}/binary/kubernetes/{{ KUBE_VERSION }}/master/{{ item }}"
+    src: "{{ playbook_dir }}/binary/kubernetes/{{ KUBE_VERSION }}/{{ item }}"
     dest: "{{ BIN_WORK }}/{{ item }}"
     mode: 0755
   with_items:
     - kubectl
 
 - name: etcd ca
-  include_tasks: etcd.yml
+  include_tasks: etcd.yaml
 
 - name: kube ca
-  include_tasks: kube.yml
+  include_tasks: kube.yaml

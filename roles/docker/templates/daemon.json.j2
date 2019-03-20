@@ -3,7 +3,7 @@
 {
     {% if DOCKER_WORK|default(false) %}
 
-    "registry-mirrors": {{ CN_REGISTRY }},
+    "registry-mirrors": ["{{ CN_REGISTRY }}"],
     "insecure-registries": "{{ insecure-registries }}",
     "exec-opts": ["native.cgroupdriver={{ CGROUP_DRIVE }}"],
     "storage-driver": "overlay2",
@@ -15,11 +15,11 @@
         "max-size": "100m",
         "max-file": "3"
     },
-    "graph": "{{ DOCKER_WORK }}",
+    "graph": "{{ DOCKER_WORK }}"
 
     {% else %} 
 
-    "registry-mirrors": {{ CN_REGISTRY }},
+    "registry-mirrors": ["{{ CN_REGISTRY }}"],
     "insecure-registries": "{{ insecure-registries }}",
     "exec-opts": ["native.cgroupdriver={{ CGROUP_DRIVE }}"],
     "storage-driver": "overlay2",
@@ -33,6 +33,7 @@
     }
 
     {% endif %}
+
 }
 
 {% else %}
@@ -40,7 +41,7 @@
 {
     {% if DOCKER_WORK|default(false) %}
 
-    "registry-mirrors": {{ CN_REGISTRY }},
+    "registry-mirrors": ["{{ CN_REGISTRY }}"],
     "exec-opts": ["native.cgroupdriver={{ CGROUP_DRIVE }}"],
     "storage-driver": "overlay2",
     "storage-opts": [
@@ -51,11 +52,11 @@
         "max-size": "100m",
         "max-file": "3"
     },
-    "graph": "{{ DOCKER_WORK }}",
+    "graph": "{{ DOCKER_WORK }}"
 
     {% else %} 
 
-    "registry-mirrors": {{ CN_REGISTRY }},
+    "registry-mirrors": ["{{ CN_REGISTRY }}"],
     "exec-opts": ["native.cgroupdriver={{ CGROUP_DRIVE }}"],
     "storage-driver": "overlay2",
     "storage-opts": [
@@ -68,6 +69,7 @@
     }
 
     {% endif %}
+
 }
 
 {% endif%}

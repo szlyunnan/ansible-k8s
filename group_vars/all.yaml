@@ -3,7 +3,7 @@
 # kubernetes 群集安装都依赖域名, 默认依赖服务hosts文件,可以使用域名服务解析
 # 当HOSTS_FILE_TAG为true时,使用本地hosts文件解析;false使用DNS服务域名解析
 ###################### 注意: 如果使用hosts为解析,请备份好原配置;默认是替换原来的hosts文件
-HOSTS_FILE_TAG: false
+HOSTS_FILE_TAG: true
 
 # domain
 # 局域网内部解析根域名;就算不用linux hosts文件解析;也需要配置。应用使用配置文件
@@ -12,36 +12,30 @@ HOSTS_FILE_TAG: false
 ### DOMAIN: "cc.co"
 DOMAIN: "cc.co"
 # 当使用域名服务解析时,域名配置为
-# 域名配置为SITE_INFO 下一层的儿子层key。
-########################
-## EXAMPLE:
-##  SITE_INFO:
-##    k8s_master:
-##      master01:
-##        ip: 192.168.3.24
-##      master02:
-##        ip: 192.168.3.25
-##      master03:
-##        ip: 192.168.3.26
-##
-## master01.${DOMAIN} --> master01.cc.co
+# 域名配置为SITE_INFO 下一层的儿子层key; 配置域名解析的时候需要注意, 默认自动生成域名清单;对照清单配置即可
 # 若使用域名服务器解析, 请按照本地生成的域名清单配置
 DOMAIN_INVENTORY: "{{ playbook_dir }}/domains"
 
 # 远程临时目录
 TOOLS_TMP_DIR: "/tmp"
 
-# app work
+# app work 存放 etcd、kubernetes ssl/configure 文件目录
 APP_WORK: "/opt/kubernetes"
 
 # run work
 RUN_WORK: "/var/run"
 
-# bin work
+# bin work 存放 二进制程序目录
 BIN_WORK: "/usr/local/bin"
 
 # systemd service work
 SYSTEM_SERVICE_WORK: "/usr/lib/systemd/system"
+
+# kube add ons info file
+KUBE_ADDONS_INFO: "{{ TOOLS_TMP_DIR }}/addons.info"
+
+# ca resource dir
+CA_BASE_DIR: "{{ playbook_dir }}/ssl/ca"
 
 # kubernetes cni
 KUBE_N: "10.254.0"
@@ -56,11 +50,31 @@ KUBE_DNS: "{{ KUBE_N }}.2"
 # 配置flanneld 、keepalived的网络通信网卡，无论几个网卡；都必须选择一个网卡配置
 NETWORK_CARD: "ens34"
 
-# kube add ons info file
-KUBE_ADDONS_INFO: "/tmp/addons.info"
+################################ CA ##########################
+# ca expriry default 100 year
+EXPIRY_TIME: "876000h"
 
-# ca resource dir
-CA_BASE_DIR: "{{ playbook_dir }}/ssl/ca"
+# ca region
+CA_REGION: "Shenzhen"
+
+# kubernetes bootstrap token (head -c 16 /dev/urandom | od -An -t x | tr -d ' ')
+BOOTSTRAP_TOKEN: "e7e9519e3dcdc1030964a23e95be008b"
+
+# ca binary version
+CA_VERSION: latest
+
+################################ NETWORK INFO ##########################
+# flannel cni
+FLANNEL_CNI: "10.30.0.0/16"
+
+# flannel log
+FLANNEL_LOG: "/var/log/flannel"
+
+# flannel type
+FLANNEL_TYPE: "host-gw"
+
+# flannel version
+FLANNEL_VERSION: latest
 
 ################################ CLUSTER INFO ##########################
 
@@ -116,12 +130,20 @@ SITE_INFO:
     work_add02:
       ip: 192.168.3.23
 
+################################ ETCD ##########################
+# etcd datadir
+ETCD_WORK: "/data/etcd"
+
+ETCD_CLEAN: true
+
+ETCD_VERSION: latest
+
 ################################ DOCKER ##########################
-# docker  systemd or  cgroupfs
+# docker  systemd or  cgroupfs kubernetes 也是取这个配置
 CGROUP_DRIVE: "cgroupfs"
 
 # docker cn registries
-CN_REGISTRY: ["https://registry.docker-cn.com"]
+CN_REGISTRY: "https://registry.docker-cn.com"
 
 # docker insecure-registries 默认禁用
 # INSECURE_REGISTRIES: ["myregistrydomain.com:5000"]
@@ -162,16 +184,23 @@ KUBE_VERSION: latest
 # 是否启用ipvs, 默认启用
 KUBE_IPVS_TAG: true
 
+# kubernetes audit log dir
+KUBE_AUDIT: "/var/log/kube-audit"
+
+KUBE_AUDIT_CLEAN: true
+
 ################################ KUBERNSTES HA ##########################
 # ha_server 2 paras haproxy and nginx
 # kubernetes 高可用默认支持haproxy和nginx，并且KUBE_MASTER_CLUSTER为true时才生效
 # 选择使用那种应用作为高可用组件，参数 haproxy nginx
+# 目前只支持haproxy
 HA_SERVER: "haproxy"
 
 ################################ KUBE ADDON INFO ##########################
 # coredns
 COREDNS:
   image: "coredns/coredns:1.3.1"
+  #image: "coredns/coredns:1.4.0"
 
 # dashboard
 DASHBOARD:
@@ -193,7 +222,7 @@ INGRESS_KP:
   tag: true
   etc: "/etc/keepalived"
   vip: "192.168.3.200"
-  interface: "ens34"
+  interface: "{{ NETWORK_CARD }}"
 
 # heapster
 HEAPSTER:

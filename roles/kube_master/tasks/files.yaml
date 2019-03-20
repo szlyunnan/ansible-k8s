@@ -11,7 +11,7 @@
 - name: deal kube-master service file
   template:
     src: "{{ item }}"
-    dest: "{{ LIB_WORK }}/{{ item }}"
+    dest: "{{ SYSTEM_SERVICE_WORK }}/{{ item }}"
   with_items:
     - kube-apiserver.service
     - kube-scheduler.service
