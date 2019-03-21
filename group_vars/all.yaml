@@ -203,10 +203,12 @@ COREDNS:
   #image: "coredns/coredns:1.4.0"
 
 # dashboard
+# dashboard token_timeout 默认是15分钟 900s
 DASHBOARD:
   image: "mirrorgooglecontainers/kubernetes-dashboard-amd64:v1.10.0"
   nodeport: 30001
   web_url: "k8s.{{ DOMAIN }}"
+  token_timeout: "900"
 
 # traefik
 TRAEFIK:
