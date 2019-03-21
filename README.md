@@ -16,5 +16,5 @@
     3、 生成ansible inventory 文件
         bash inventory_file.sh
     4、 安装kubernetes群集
-        ansible-playbook k8s
+        ansible-playbook k8s.yaml
 ```
